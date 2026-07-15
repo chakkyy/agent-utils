@@ -1,0 +1,19 @@
+{
+  "name": "agent-utils",
+  "owner": {
+    "name": "Chakky Ramirez",
+    "url": "https://github.com/chakkyy"
+  },
+  "metadata": {
+    "description": "Small, focused utilities for coding agents. Each util is an independently installable plugin.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "time-awareness",
+      "description": "Keeps your agent aware of the current date & time on every turn — no more 'good night!' at 10am in long sessions.",
+      "source": "./utils/time-awareness",
+      "strict": false
+    }
+  ]
+}
