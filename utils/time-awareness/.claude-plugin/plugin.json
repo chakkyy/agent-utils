@@ -1,9 +1,10 @@
 {
   "name": "time-awareness",
   "description": "Keeps your agent aware of the current date & time on every turn — no more 'good night!' at 10am in long sessions.",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "license": "MIT",
   "author": {
-    "name": "Chakky Ramirez",
+    "name": "Carlos Ramirez",
     "url": "https://github.com/chakkyy"
   }
 }
