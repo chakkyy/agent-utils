@@ -20,11 +20,12 @@ Deterministic by design: the model never has to *decide* to check the clock
 (it doesn't know it's wrong about the time — that's the whole bug). The hook
 runs on every prompt: no tokens spent on tool calls, no behavior to remember.
 
-> **Plugin ≠ skill.** time-awareness has no `SKILL.md` and nothing to invoke:
-> it is a *hook-based plugin*. The harness runs the hook before every prompt;
-> the model never participates. Skill installers (like `npx skills add`) only
-> copy skills — they will **not** install this hook. Use the plugin
-> marketplace commands below.
+> **Plugin ≠ skill.** This plugin is *hook-based*: the harness runs it before
+> every prompt, the model never participates. Skill installers (like
+> `npx skills add`) will **not** install this hook — they install the
+> [companion skill](../../skills/time-awareness/) instead, a portable
+> model-invoked fallback for agents without hook support. On Claude Code or
+> Codex, use the plugin marketplace commands below.
 
 ## Install — Claude Code
 
@@ -166,4 +167,8 @@ also run a real end-to-end smoke test against the `claude` CLI.
 
 **Why not a skill?** Skills are model-invoked: the agent has to realize it
 needs one. An agent that's wrong about the time doesn't know it's wrong — so it
-would never invoke it. Hooks are harness-enforced and run every time.
+would never invoke it. Hooks are harness-enforced and run every time. That
+said, the repo ships a [companion skill](../../skills/time-awareness/)
+(`npx skills add chakkyy/agent-utils`) as a portable fallback for agents that
+support skills but not hooks; it nudges the model to read the machine clock
+before time-sensitive output, and points back to this plugin as the upgrade.
