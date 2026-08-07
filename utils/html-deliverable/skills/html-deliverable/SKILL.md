@@ -62,14 +62,19 @@ discipline.
 
 ## Reference skeleton
 
-A complete example lives in [reference.html](reference.html) next to this file —
-an `editorial`-theme page explaining a sprint cycle to its owner. Read it
-before writing the first page of a session and clone its patterns: CSS
-variables, shell header/footer, `.toc`, `.statline`, evidence tables,
+A complete example lives in [reference.html](reference.html) next to this file.
+Read it before writing the first page of a session and clone its patterns:
+CSS variables, shell header/footer, `.toc`, `.statline`, evidence tables,
 `dl.gloss` (vocabulary), `.ba` (before/after), `.card.dec` + `.opts`
 (decisions with a recommended option), `.tag` (status chips), `.ask`
-(requests to other people). Its numbers and tickets are illustrative sample
-data, labeled as such — never copy them into a real deliverable.
+(requests to other people).
+
+The example happens to explain a planning question — but that's just one
+deliverable type. The same structure and patterns serve a kickoff, a QA
+guide, a feature explainer, a comparison, an audit, a post-mortem, meeting
+material: swap the sections, keep the discipline. Its numbers and tickets
+are illustrative sample data, labeled as such — never copy them into a real
+deliverable.
 
 ## Content rules
 
