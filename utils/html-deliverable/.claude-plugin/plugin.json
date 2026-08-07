@@ -1,0 +1,10 @@
+{
+  "name": "html-deliverable",
+  "description": "Turns 'make me an HTML page' into a polished single-file local page — invariant structure, four themes, evidence-first content.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Carlos Ramirez",
+    "url": "https://github.com/chakkyy"
+  }
+}
