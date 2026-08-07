@@ -15,3 +15,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: time-awareness test suite
         run: utils/time-awareness/tests/run-tests.sh
+      - name: html-deliverable test suite
+        run: utils/html-deliverable/tests/run-tests.sh

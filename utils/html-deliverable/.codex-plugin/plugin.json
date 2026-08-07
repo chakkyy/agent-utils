@@ -1,0 +1,16 @@
+{
+  "name": "html-deliverable",
+  "version": "1.0.0",
+  "description": "Turns 'make me an HTML page' into a polished single-file local page — invariant structure, four themes, evidence-first content.",
+  "license": "MIT",
+  "author": {
+    "name": "Carlos Ramirez",
+    "url": "https://github.com/chakkyy"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "HTML Deliverable",
+    "shortDescription": "A proven recipe for polished single-file HTML pages: kickoffs, QA guides, meeting material, comparisons.",
+    "category": "utilities"
+  }
+}

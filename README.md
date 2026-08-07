@@ -2,8 +2,9 @@
 
 Small, focused utilities for coding agents. Each util lives in its own folder
 under [`utils/`](utils/) and installs independently as a plugin for **Claude
-Code** and **Codex CLI**. These are hook-based plugins, not skills — install
-them with the plugin marketplace commands below, not with skill installers.
+Code** and **Codex CLI**. Some utils are hook-based, some are skill-based —
+each util's README says which. Either way, install them with the plugin
+marketplace commands below.
 
 ## Install
 
@@ -32,6 +33,7 @@ troubleshooting.
 | Util | What it fixes |
 | --- | --- |
 | [time-awareness](utils/time-awareness/) | Long sessions where the agent still thinks it's the time the session started — "go get some rest!" at 10am. Injects the machine's current date & time into every prompt. |
+| [html-deliverable](utils/html-deliverable/) | "Make me an HTML page" producing gradient-and-glass slop with invented numbers. A skill with a proven recipe: invariant structure, four themes, one accent color, real data only. |
 
 Each util's README covers its options, the manual (no-plugin) install, and how
 it works.

@@ -151,13 +151,14 @@ case "$HOOK_CMD" in
   *) bad "hooks.json command is not quoted: $HOOK_CMD" ;;
 esac
 
+# The marketplace catalog version is independent of each plugin's version;
+# only the plugin's own claude/codex manifests must agree.
 PLUGIN_VERSION=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["version"])' "$PLUGIN_DIR/.claude-plugin/plugin.json")
 CODEX_VERSION=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["version"])' "$PLUGIN_DIR/.codex-plugin/plugin.json")
-MARKET_VERSION=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["metadata"]["version"])' "$REPO_DIR/.claude-plugin/marketplace.json")
-if [ "$PLUGIN_VERSION" = "$MARKET_VERSION" ] && [ "$PLUGIN_VERSION" = "$CODEX_VERSION" ]; then
-  ok "claude/codex plugin.json and marketplace.json versions in sync ($PLUGIN_VERSION)"
+if [ "$PLUGIN_VERSION" = "$CODEX_VERSION" ]; then
+  ok "claude/codex plugin.json versions in sync ($PLUGIN_VERSION)"
 else
-  bad "version drift: claude=$PLUGIN_VERSION codex=$CODEX_VERSION marketplace=$MARKET_VERSION"
+  bad "version drift: claude=$PLUGIN_VERSION codex=$CODEX_VERSION"
 fi
 
 # --------------------------------------------------------------------- speed
