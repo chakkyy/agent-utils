@@ -38,12 +38,13 @@ when opened — fonts and icons come from CDNs.)
 - **Content discipline**: numbers must be real and verified; every section
   answers a question the audience actually has; meeting pages end with a
   "For this meeting" decision list.
-- **A reference skeleton** ([skills/html-deliverable/reference.html](skills/html-deliverable/reference.html)) —
-  an `editorial`-theme example that explains a sprint cycle: vocabulary
-  glossary, before/after panels, decision cards with a recommended option,
-  status chips, asks-to-others. All the CSS patterns ready to clone; its data
-  is sample/illustrative — the skill tells the model never to copy it into a
-  real deliverable.
+- **A reference skeleton** ([skills/html-deliverable/reference.html](skills/html-deliverable/reference.html))
+  with all the CSS patterns ready to clone: vocabulary glossary, before/after
+  panels, decision cards with a recommended option, status chips,
+  asks-to-others, evidence tables, statlines. The example is one deliverable
+  type (a planning explainer) — the same patterns build kickoffs, QA guides,
+  comparisons, audits, post-mortems. Its data is sample/illustrative — the
+  skill tells the model never to copy it into a real deliverable.
 
 ## Install — Claude Code
 
