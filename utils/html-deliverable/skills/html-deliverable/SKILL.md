@@ -66,6 +66,34 @@ A custom theme is valid when the subject calls for it (e.g. a dark-mode QA
 review shown in dark) — keep the invariant structure and the single-accent
 discipline.
 
+## Design taste (polish pass before opening the file)
+
+The details that separate a designed page from a default-looking one:
+
+- **Hierarchy from size + weight, not color.** One display size for the page
+  title, one for section headers, body at 15–16px. If everything is bold,
+  nothing is.
+- **Spacing on a scale** (4/8-based) and whitespace does the grouping: more
+  space before a section than after its header; related blocks sit visibly
+  closer than unrelated ones.
+- **Typography micro**: `text-wrap: balance` on headings, `text-wrap: pretty`
+  on body; `-webkit-font-smoothing: antialiased` on the root; slight negative
+  letter-spacing (~`-0.02em`) on display sizes only — never letterspace
+  lowercase body text.
+- **Comparable numbers align**: mono `tabular-nums` not just in tables but in
+  statlines and inline metrics, so digits line up and nothing shifts.
+- **Concentric radii**: outer radius = inner radius + padding. A container and
+  its nested element never share the same radius.
+- **Optical over geometric**: nudge glyphs/icons that look off-center; a play
+  triangle or chevron centered by math usually isn't centered to the eye.
+- **Restraint compounds**: thin low-contrast `1px` borders; if any shadow is
+  needed at all, nothing heavier than `0 1px 2px rgba(0,0,0,.04)`.
+- **Links in prose**: real underlines with `text-underline-offset: 2px` and a
+  muted `text-decoration-color` — not bare accent-colored text.
+- **Signature micro-details** (cheap, high-perceived-craft): `::selection`
+  tinted with the accent at low opacity; `scroll-behavior: smooth` for the
+  pill-nav anchors, wrapped in `@media (prefers-reduced-motion: no-preference)`.
+
 ## Reference skeleton
 
 A complete example lives in [reference.html](reference.html) next to this file.
