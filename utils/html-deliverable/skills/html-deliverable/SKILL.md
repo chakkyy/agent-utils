@@ -42,10 +42,12 @@ names).
 - Voice: precise, calm, no hype; sentence case; write in the user's language;
   explain all jargon in plain words — the audience includes non-devs (PM,
   design).
-- **Content-related favicon** (mandatory): an emoji that represents the
-  document's topic, embedded as an SVG data URI so it needs no external file —
-  `<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">`.
-  It lets the reader tell tabs apart when several deliverables are open.
+- **Content-related favicon** (mandatory): pick one that represents the
+  document's topic so the reader can tell tabs apart when several deliverables
+  are open. Any source works — an emoji embedded as an SVG data URI
+  (`<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">`),
+  an external icon URL, or the project's real favicon (local HTML has no CSP,
+  so external sources are fine).
 - Icons via `iconify-icon` from CDN
   (`https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js`) only
   when the icons ARE content; when comparing sets, label each with its library
