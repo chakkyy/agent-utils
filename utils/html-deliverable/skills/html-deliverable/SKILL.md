@@ -94,6 +94,26 @@ The details that separate a designed page from a default-looking one:
   tinted with the accent at low opacity; `scroll-behavior: smooth` for the
   pill-nav anchors, wrapped in `@media (prefers-reduced-motion: no-preference)`.
 
+### Feel — the Apple pass (from the fluid-interfaces playbook)
+
+- **Press feedback on pointer-down, not release**: anything clickable (nav
+  pills, `summary`, buttons) gets `:active { transform: scale(.97) }` with a
+  ~100ms ease-out transition. Animate only `transform`/`opacity`.
+- **Leading tracks size inversely**: tight on display (`line-height` 1.05–1.1
+  on the h1), loose on body (1.5–1.65). Hierarchy is size + weight + leading
+  as a set, never size alone.
+- **Scale with the reader**: key font sizes and spacing in `rem`/`em`, so a
+  bumped browser text size enlarges the layout instead of breaking it.
+- **Sticky chrome as material**: if the header or pill nav sticks, translucent
+  background + `backdrop-filter: blur() saturate(180%)` with content scrolling
+  under — a soft scroll edge, not a permanent hard border. Fall back to solid
+  under `prefers-reduced-transparency` and to near-solid + defined border under
+  `prefers-contrast: more`. (Functional translucency on chrome is allowed; the
+  glass-effect ban targets decorative glassmorphism cards.)
+- **Wayfinding labels**: nav pills name the section's contents ("Risks",
+  "Decisions"), never generic umbrellas ("Info", "More"). Every screenful
+  answers: where am I, where can I go, how do I get out.
+
 ## Reference skeleton
 
 A complete example lives in [reference.html](reference.html) next to this file.
