@@ -19,15 +19,30 @@ out of version control — don't commit it unless explicitly asked.
 
 ## Invariant structure + variable theme
 
-The STRUCTURE is always the same. The STYLE varies by theme: don't repeat the
-same look twice in a row — pick per audience and purpose (or whichever the user
-names).
+The STRUCTURE is always the same. The STYLE varies by theme.
+
+### Choosing the theme
+
+- **User active in the session**: ask one question (via the harness's
+  question tool if available, otherwise a short plain-text question):
+  recommend one theme based on the content with a one-line why, list the
+  rest, and leave room for a custom theme in the user's own words. Repeating
+  the previous theme is fine when the subject is the same or the page belongs
+  to a series — consistency beats novelty there.
+- **Autonomous run** (a goal-mode task, scheduled job, unattended session):
+  decide alone from the theme table's "When" column — never block the flow on
+  a question; record the choice and the one-line reason in the `<head>`
+  comment.
 
 ### Invariant (every theme)
 
-- Header shell (project wordmark left, mono metadata right) · pill nav with
-  anchors when there are 4+ sections · sections with `scroll-margin-top` ·
-  footer mirroring the wordmark.
+- Header shell (project wordmark left, mono metadata + toggle right) · pill
+  nav with anchors when there are 4+ sections · sections with
+  `scroll-margin-top` · footer mirroring the wordmark.
+- **The shell is sticky**: header (and pill nav, if present) stay pinned while
+  scrolling as translucent material (blur + saturate, content passes under),
+  so the light/dark toggle and the anchors are always reachable. Solid
+  fallbacks under `prefers-reduced-transparency` / `prefers-contrast: more`.
 - **Light/dark toggle** (default-on): a small button at the right end of the
   header shell switches color scheme. Initial state follows
   `prefers-color-scheme`; the choice persists in `localStorage`. Implement by
@@ -118,6 +133,11 @@ The details that separate a designed page from a default-looking one:
 - **Signature micro-details** (cheap, high-perceived-craft): `::selection`
   tinted with the accent at low opacity; `scroll-behavior: smooth` for the
   pill-nav anchors, wrapped in `@media (prefers-reduced-motion: no-preference)`.
+- **One quiet background device** (optional, max one per page): a low-contrast
+  dot grid (`radial-gradient` dots at ~4% ink, 24px cell) or a single soft
+  radial tint of the accent behind the hero, theme-aware via variables. It
+  keeps the canvas from feeling sterile without competing with content. Never
+  mesh/AI-purple gradients, never grain over tables, never two devices.
 
 ### Feel — the Apple pass (from the fluid-interfaces playbook)
 
