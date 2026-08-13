@@ -28,6 +28,13 @@ names).
 - Header shell (project wordmark left, mono metadata right) · pill nav with
   anchors when there are 4+ sections · sections with `scroll-margin-top` ·
   footer mirroring the wordmark.
+- **Light/dark toggle** (default-on): a small button at the right end of the
+  header shell switches color scheme. Initial state follows
+  `prefers-color-scheme`; the choice persists in `localStorage`. Implement by
+  re-declaring the CSS variables under `html[data-theme="dark"]` (inverse for
+  dark-first themes like terminal) — content styles read only the variables.
+  Sun/moon glyph swap + `aria-pressed`; transition `background`/`color` at
+  ~150ms ease-out, none under `prefers-reduced-motion`.
 - Evidence as tables: caption below, sentence-case headers, numeric column
   `.num` right-aligned + mono `tabular-nums`. Big stats in a statline with
   dividers.
@@ -53,18 +60,36 @@ names).
   when the icons ARE content; when comparing sets, label each with its library
   in small mono.
 
+### Apple visual base (shared by every theme)
+
+Every theme is a variation on the same Apple-derived base (see "Feel — the
+Apple pass" below for the interaction half):
+
+- Display type large and tight: `-0.02em` to `-0.035em` tracking, line-height
+  1.02–1.1, hierarchy built from size + weight + leading as a set. Body at
+  15–16px, line-height 1.5–1.65.
+- Sticky chrome as translucent material (blur + saturate), content scrolling
+  under; solid fallbacks for reduced transparency / more contrast.
+- Rounded concentric radii (outer = inner + padding), generous whitespace,
+  thin borders; depth from layering, never from heavy shadows.
+- Font stacks always end in `system-ui` so the page degrades to the platform
+  face gracefully.
+
 ### Themes (pick one, declare it in a comment in the `<head>`)
 
 | Theme | When | Recipe |
 |---|---|---|
-| `geist` (default) | Kickoffs, plans, working docs | Geist Sans + Geist Mono · white `#fff`, ink `#171717`, borders `#eaeaea` · light |
+| `apple` (default) | Kickoffs, plans, working docs, pitches, demos | Geist Sans + Geist Mono · white `#fff`, ink `#171717`, borders `#eaeaea` · **display dial**: working docs at weight 600 / ~2.5rem display; pitches at 800 / 3.5rem+ with huge stats and a more present accent |
 | `terminal` | Technical evidence, QA, audits, debugging | Dark background `#0d1117`, ink `#e6edf3`, mono as protagonist (Geist Mono or JetBrains Mono), bright brand accent |
 | `editorial` | Long-read docs, narrative proposals | Characterful serif for display (e.g. Newsreader/Fraunces) + sans for body · slightly warm paper · more leading |
-| `bold` | Pitches, demos, anything that must land hard | Geist at weight 800, giant display, more present accent, huge stats |
+
+The former `geist` and `bold` themes are merged into `apple` — the display
+dial covers both registers; pick the position per document, don't mix
+registers on one page.
 
 A custom theme is valid when the subject calls for it (e.g. a dark-mode QA
-review shown in dark) — keep the invariant structure and the single-accent
-discipline.
+review shown in dark) — keep the invariant structure, the Apple base and the
+single-accent discipline.
 
 ## Design taste (polish pass before opening the file)
 
