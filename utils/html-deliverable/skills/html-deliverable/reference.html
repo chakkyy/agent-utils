@@ -21,10 +21,24 @@
   --sans:"Geist",system-ui,sans-serif;
   --serif:"Newsreader",Georgia,serif;
 }
+html[data-theme=dark]{
+  --bg:#151310; --bg2:#1d1a15; --ink:#eae6dd; --sub:#a49d90; --faint:#7a746a;
+  --border:#2c2822; --border2:#463f36;
+  --accent:#5b96ff; --accent-bg:rgba(91,150,255,.09);
+  --ok:#3fb469; --ok-bg:rgba(63,180,105,.1);
+  --warn:#d3a24a; --warn-bg:rgba(211,162,74,.1);
+  --err:#e0605f; --err-bg:rgba(224,96,95,.1);
+}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased;transition:background 150ms ease-out,color 150ms ease-out}
+@media(prefers-reduced-motion:reduce){body{transition:none}}
+.mode{font-family:var(--sans);font-size:14px;line-height:1;color:var(--sub);background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:6px 10px;cursor:pointer;margin-left:14px;transition:transform 100ms ease-out,border-color 100ms ease-out}
+.mode:hover{border-color:var(--border2);color:var(--ink)}
+.mode:active{transform:scale(.97)}
+.mode:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.mode{transition:none;transform:none}}
 header.shell{display:flex;justify-content:space-between;align-items:baseline;max-width:1000px;margin:0 auto;padding:22px 28px;border-bottom:1px solid var(--border)}
 .wordmark{font-family:var(--serif);font-weight:600;font-size:17px;letter-spacing:-.01em}
 .wordmark b{color:var(--accent);font-weight:600}
@@ -125,8 +139,26 @@ footer.shell{display:flex;justify-content:space-between;align-items:center;max-w
 
 <header class="shell">
   <span class="wordmark">acme <b>cycle 12</b></span>
-  <span class="shellmeta">aug 2026 · refinement</span>
+  <span>
+    <span class="shellmeta">aug 2026 · refinement</span>
+    <button class="mode" type="button" aria-pressed="false" aria-label="Switch to dark mode">☾</button>
+  </span>
 </header>
+<script>
+(function(){
+  var btn=document.querySelector('.mode'),root=document.documentElement;
+  var saved=localStorage.getItem('theme');
+  var dark=saved?saved==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  function apply(){
+    root.setAttribute('data-theme',dark?'dark':'light');
+    btn.textContent=dark?'☀':'☾';
+    btn.setAttribute('aria-pressed',String(dark));
+    btn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+  }
+  apply();
+  btn.addEventListener('click',function(){dark=!dark;localStorage.setItem('theme',dark?'dark':'light');apply();});
+})();
+</script>
 
 <main>
 
