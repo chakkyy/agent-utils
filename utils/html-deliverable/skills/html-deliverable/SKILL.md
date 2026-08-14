@@ -180,6 +180,13 @@ deliverable.
 - Real data only: if a number matters, verify it before publishing it (and
   when in doubt, say exactly what it measures: "565 rendered instances, 263
   files").
+- **Everything with a source gets a link.** Any PR, ticket, doc, dashboard,
+  config page, file or claim the page mentions that has a URL is a real `<a>` —
+  PR numbers link to the PR, panels to the panel, claims to the doc that backs
+  them. The reader must never have to hunt for an address the page already
+  knows. Verify URLs instead of guessing them (a project key from the repo
+  beats an invented slug); if something genuinely has no URL, it stays plain
+  text — no dead or invented links.
 - Every section answers a question the audience actually has.
 - If the page is for a meeting, close with a "For this meeting" section
   listing the points to decide.
