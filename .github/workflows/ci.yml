@@ -17,3 +17,5 @@ jobs:
         run: utils/time-awareness/tests/run-tests.sh
       - name: html-deliverable test suite
         run: utils/html-deliverable/tests/run-tests.sh
+      - name: evidence-first test suite
+        run: utils/evidence-first/tests/run-tests.sh

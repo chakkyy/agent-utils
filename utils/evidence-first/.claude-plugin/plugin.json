@@ -1,0 +1,10 @@
+{
+  "name": "evidence-first",
+  "description": "Blocks the agent from recommending technical work until it has produced a receipt — identifier, link, verbatim quote, causal tie — or reports NO EVIDENCE and stops.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Carlos Ramirez",
+    "url": "https://github.com/chakkyy"
+  }
+}

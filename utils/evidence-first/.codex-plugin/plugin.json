@@ -1,0 +1,16 @@
+{
+  "name": "evidence-first",
+  "version": "1.0.0",
+  "description": "Blocks the agent from recommending technical work until it has produced a receipt — identifier, link, verbatim quote, causal tie — or reports NO EVIDENCE and stops.",
+  "license": "MIT",
+  "author": {
+    "name": "Carlos Ramirez",
+    "url": "https://github.com/chakkyy"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Evidence First",
+    "shortDescription": "Find the receipt before proposing the work: search log and verified evidence, or NO EVIDENCE and stop.",
+    "category": "utilities"
+  }
+}
