@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Small, focused utilities for coding agents. Each util is an independently installable plugin.",
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   "plugins": [
     {
@@ -19,6 +19,12 @@
       "name": "html-deliverable",
       "description": "Turns 'make me an HTML page' into a polished single-file local page — invariant structure, four themes, evidence-first content.",
       "source": "./utils/html-deliverable",
+      "strict": false
+    },
+    {
+      "name": "evidence-first",
+      "description": "Blocks the agent from recommending technical work until it has produced a receipt — identifier, link, verbatim quote, causal tie — or reports NO EVIDENCE and stops.",
+      "source": "./utils/evidence-first",
       "strict": false
     }
   ]
