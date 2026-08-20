@@ -61,9 +61,12 @@ The STRUCTURE is always the same. The STYLE varies by theme.
 - Forbidden: ALL-CAPS eyebrows, decorative em-dashes, decorative gradients,
   glass effects, arbitrary icons, decorative section numbering, mini-sized
   prose.
-- Voice: precise, calm, no hype; sentence case; write in the user's language;
-  explain all jargon in plain words — the audience includes non-devs (PM,
-  design).
+- Voice: precise, calm, no hype; sentence case; write in the user's language.
+  **Product language everywhere**: labels of flows, steps and tags name the
+  effect on the product/user ("the new site is already live", never "flip
+  URL_ADMIN"); infra terms and commands get translated or moved into a
+  `<details>`. The test: a PM reads any component without asking what a step
+  means — if they'd ask, the label is wrong.
 - **Content-related favicon** (mandatory): pick one that represents the
   document's topic so the reader can tell tabs apart when several deliverables
   are open. Any source works — an emoji embedded as an SVG data URI
