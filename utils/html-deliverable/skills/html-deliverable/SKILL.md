@@ -92,19 +92,123 @@ Apple pass" below for the interaction half):
 
 ### Themes (pick one, declare it in a comment in the `<head>`)
 
+Match the theme to what the content IS: an analysis that argues with numbers, a
+postmortem, and a pitch are different documents and should look different.
+Five themes; don't repeat the same look twice in a row unless the page belongs
+to a series.
+
 | Theme | When | Recipe |
 |---|---|---|
 | `apple` (default) | Kickoffs, plans, working docs, pitches, demos | Geist Sans + Geist Mono · white `#fff`, ink `#171717`, borders `#eaeaea` · **display dial**: working docs at weight 600 / ~2.5rem display; pitches at 800 / 3.5rem+ with huge stats and a more present accent |
-| `terminal` | Technical evidence, QA, audits, debugging | Dark background `#0d1117`, ink `#e6edf3`, mono as protagonist (Geist Mono or JetBrains Mono), bright brand accent |
-| `editorial` | Long-read docs, narrative proposals | Characterful serif for display (e.g. Newsreader/Fraunces) + sans for body · slightly warm paper · more leading |
+| `swiss` | Analyses, comparisons, audits — pages that argue with numbers | Light stone canvas `#fafaf9` · hierarchy by **opacity of one ink** (100 / 70 / 45%), never a second gray ramp · headings weight 300–400, never bold · strict 8px grid, radius 0–4px · accent at 10–60% opacity, full strength only on the verdict |
+| `terminal` | QA, debugging, live technical evidence | Dark `#0d1117`, ink `#e6edf3`, mono as protagonist (Geist Mono or JetBrains Mono), bright brand accent · **bimodal density**: dense mono metadata blocks beside generous empty space · `[ SECTION ]` bracket labels allowed here only |
+| `industrial` | Postmortems, incidents, ops/security material | Newsprint `#f4f4f0`, monolithic sans, ONE hazard accent (red family) · zero border-radius, visible 1–2px dividers · facts live in `dl`/`data`/`kbd`, not prose |
+| `editorial` | Long-read docs, narrative proposals | Characterful serif for display ONLY (Newsreader/Fraunces) + sans body · warm bone paper `#f7f6f3`, off-black ink (never `#000`) · 1px `#eaeaea` borders, washed pastel tags · more leading |
 
-The former `geist` and `bold` themes are merged into `apple` — the display
-dial covers both registers; pick the position per document, don't mix
-registers on one page.
+**Register dials, not themes** — two operations on top of any theme: `quieter`
+(desaturate 70–85%, drop each weight one step, flatten shadows — the default
+register for stakeholder docs) and `bolder` (amplify ONE named section — the
+headline finding — with the theme's own scale at full strength while the
+neighbors recede; five bolded things is flat, not bold).
 
 A custom theme is valid when the subject calls for it (e.g. a dark-mode QA
 review shown in dark) — keep the invariant structure, the Apple base and the
-single-accent discipline.
+single-accent discipline. Agency-landing maximalism (glass cards, glowing
+orbs, double-bezel buttons) stays out of every theme: these pages optimize
+for scan speed, not "$150k feel".
+
+## Density: build an infographic, not a report
+
+The reader scans before reading, and mostly does not switch to reading. A
+section that only works when read start to finish has failed, however well
+written it is.
+
+**Default to the visual form.** Reach for prose only when no other form
+carries the meaning:
+
+| What you have | What it becomes |
+|---|---|
+| Counts, totals, "N in M months" | Statline / one big number where the adjective was |
+| Two or more things compared on the same axes | Table |
+| "X is Y" facts: metrics, versions, owners, dates | Key-value grid (`dl.kv`), never sentences |
+| An ordered procedure | Numbered steps, one action each |
+| A sequence in time (cutover, incident, release) | Timeline |
+| A pipeline with stages | Flow: labeled boxes with arrows |
+| A proportion, split or budget | Meter / bar row |
+| Evidence from a source | Blockquote + `cite`, or claim + source chip |
+| Parallel alternatives, limits, caveats | Cards |
+| A state ("blocked", "stopped", "confirmed") | Tag/badge, not an adjective in a sentence |
+| Q&A, decision log, objections | Divider list: `border-bottom` rows, no cards |
+| A rejected option and why | One table row: option · number that kills it |
+| A verdict | The verdict box, once, at the end of its section |
+
+**Budgets, checked before publishing:**
+
+- A prose block runs to 3 sentences. At 4, it was a table.
+- Cut every sentence in half, then do it again; what survives is the page.
+- A table cell holds a fragment, ≤ 12 words. A cell with two sentences is a
+  paragraph hiding in a table — rebuild it as claim + source chip, with the
+  long version in a `<details>` if it must exist.
+- A section carries ~120 words of prose total, outside tables and captions.
+- One screenful holds one idea and one visual.
+- A heading never gets restated by its first line: if the heading says it,
+  the first line adds new information or disappears.
+- **The 60-second rule:** the verdict and its three strongest supports must be
+  reachable by scrolling and reading only components — no paragraph on the
+  critical path.
+
+**Say each fact once, in its strongest form.** A number in the statline never
+reappears in a paragraph; a framing sentence lives in one place. Repetition
+reads as padding and trains the reader to skim past things that matter.
+
+**The scan test, run before opening:** cover every paragraph and read only the
+headings, tables, statlines and blockquotes. If the argument survives, publish.
+If it collapses, the argument was hiding in prose and belongs in the visuals.
+
+Section subtitles earn their line by saying what the section proves, not by
+introducing it. "Four cases, one mechanism" works; "In this section we look at
+the cases" is a line the reader pays for and gets nothing from.
+
+## Component recipes
+
+The vocabulary that replaces prose. Each entry: when it wins, then the
+structural essence (adapt to the theme's variables; full implementations
+accumulate in the reference skeleton).
+
+- **Statline / big number** — totals and headline metrics. Oversized digits
+  (mono, `tabular-nums`, tight tracking) with a small muted caption below;
+  cells divided by hairlines.
+- **Key-value grid** (`dl.kv`) — specs, owners, dates, versions. `dl` in a
+  2-col grid: `dt` small mono muted, `dd` normal; one hairline between rows.
+  Kills every "the X is Y, and the Z is W" sentence.
+- **Timeline** — anything that happens in order over time. Left `2px` rule,
+  a dot per event, date in small mono, one-fragment label; phase changes get
+  the accent dot.
+- **Flow** — pipelines and cutovers. Inline-flex boxes joined by `→` in the
+  faint color; the risky stage carries a tag, not an explanation.
+- **Meter / bar row** — splits, budgets, progress, effort. Label + thin track
+  (`height: 6-8px`) + fill in accent; value at the right in mono. Three bars
+  replace a paragraph of proportions.
+- **Tag / badge** — states. Small mono pill, one muted tint per status FAMILY
+  (ok/warn/err/neutral), text + border in the family color.
+- **Callout** — one warning or instruction. Three lines max: what · why (only
+  if it changes behavior) · what to do next. A callout with a fourth line is a
+  section.
+- **Divider list** — Q&A, decision logs, FAQs, objections. Rows separated by
+  `border-bottom` only; question/label bold or mono, answer muted. No boxes.
+- **Claim + source chip** — evidence tables. The cell states the claim in ≤ 12
+  words; the source is a linked chip (`file:line`, PR, dashboard) beside or
+  below it; the verbatim quote lives in a `<details>` when it matters.
+- **Before / after** (`.ba`) — any "today vs proposed". Two labeled columns,
+  same axes, differences carry the accent.
+- **Verdict box** — the one conclusion. Accent-tinted background, 2-3
+  sentences, once per page (or once per major section in long audits).
+- **Container lines** (optional device, max one per page) — `1px` hairlines at
+  the content edges with tiny corner squares, `pointer-events: none`, behind
+  content. Frames the page as a measured object; counts as the page's one
+  background device.
+- **`kbd`** — literal commands and shortcuts. `1px` border, `4px` radius,
+  mono, faint tint; show the token instead of describing it.
 
 ## Design taste (polish pass before opening the file)
 
@@ -112,10 +216,16 @@ The details that separate a designed page from a default-looking one:
 
 - **Hierarchy from size + weight, not color.** One display size for the page
   title, one for section headers, body at 15–16px. If everything is bold,
-  nothing is.
-- **Spacing on a scale** (4/8-based) and whitespace does the grouping: more
-  space before a section than after its header; related blocks sit visibly
-  closer than unrelated ones.
+  nothing is. For text shades, prefer opacity steps of one ink (100 / 70 /
+  45%) over a second gray ramp.
+- **Spacing on a scale** (4/8-based) and whitespace does the grouping: the gap
+  between groups is at least 2× the gap inside a group, and each nesting level
+  gets ~1.4× the spacing of its child. Order of tools: space first, background
+  tint second, divider line last — a line only where space alone can't carry
+  the structure.
+- **`color-scheme` synced to the theme** (`light dark` on `:root`, flipped with
+  the toggle) so native scrollbars and form controls match; every interactive
+  element keeps a visible `:focus-visible` ring — never bare `outline: none`.
 - **Typography micro**: `text-wrap: balance` on headings, `text-wrap: pretty`
   on body; `-webkit-font-smoothing: antialiased` on the root; slight negative
   letter-spacing (~`-0.02em`) on display sizes only — never letterspace
