@@ -35,6 +35,7 @@ troubleshooting.
 | [time-awareness](utils/time-awareness/) | Long sessions where the agent still thinks it's the time the session started — "go get some rest!" at 10am. Injects the machine's current date & time into every prompt. |
 | [html-deliverable](utils/html-deliverable/) | "Make me an HTML page" producing gradient-and-glass slop with invented numbers. A skill with a proven recipe: invariant structure, four themes, one accent color, real data only. |
 | [evidence-first](utils/evidence-first/) | Confident proposals for problems nobody has. The agent must produce a receipt — identifier, resolving link, verbatim quote, causal tie — before recommending any guard, CI check, migration or refactor, or emit `NO EVIDENCE` and stop. |
+| [live-qa](utils/live-qa/) | "Does it work on staging?" answered from code reading and green unit suites. A skill that forces a real logged-in browser session: one verdict per case with screenshot/payload evidence, plus a Playwright kit with bot masking, SW blocking and analytics capture pre-solved. |
 
 Each util's README covers its options, the manual (no-plugin) install, and how
 it works.

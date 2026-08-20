@@ -1,0 +1,10 @@
+{
+  "name": "live-qa",
+  "description": "Drive a deployed environment in a real logged-in browser session and adjudicate each QA case from what actually renders — screenshot as evidence, or 'NO USER TO TEST WITH' and stop.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Carlos Ramirez",
+    "url": "https://github.com/chakkyy"
+  }
+}
