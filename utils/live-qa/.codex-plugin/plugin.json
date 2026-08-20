@@ -1,0 +1,16 @@
+{
+  "name": "live-qa",
+  "version": "1.0.0",
+  "description": "Drive a deployed environment in a real logged-in browser session and adjudicate each QA case from what actually renders — screenshot as evidence, or 'NO USER TO TEST WITH' and stop.",
+  "license": "MIT",
+  "author": {
+    "name": "Carlos Ramirez",
+    "url": "https://github.com/chakkyy"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Live QA",
+    "shortDescription": "Verdicts come from rendered screens in a real session — never from green suites or code reading.",
+    "category": "utilities"
+  }
+}
