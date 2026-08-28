@@ -252,6 +252,45 @@ The details that separate a designed page from a default-looking one:
   keeps the canvas from feeling sterile without competing with content. Never
   mesh/AI-purple gradients, never grain over tables, never two devices.
 
+### Hierarchy — the tiers pass (index and hub pages especially)
+
+A page that shows every item at the same size has no hierarchy, however
+polished each card is. Before styling, sort the content into tiers and give
+each tier its own component; a screenful should read in one glance as "these
+two or three matter, the rest is here if you need it".
+
+| Tier | What goes there | Component |
+|---|---|---|
+| 1 · the things opened every day | 2–3 items, never more | **Hero cards**: large title (1.4–1.6rem, weight 700), one-line purpose, a "Open →" call to action, min-height so they read as a band |
+| 2 · reached often | 4–6 items | **Cards**: normal title, one line, path in mono, state chip |
+| 3 · reached sometimes | any number | **Divider rows**: name + one line on the left, chip + date + arrow on the right; `border-bottom` only, no boxes |
+| 4 · archive and mechanics | the rest | **Collapsed `details`** with a `+`/`−` summary; regeneration commands live inside |
+
+Rules that make the tiers hold:
+
+- **Display `h1`** for the page: `clamp(2.2rem, 4.5vw, 3.4rem)`, weight 800,
+  tracking `-0.035em`, line-height 1.02, a short lede under it in muted ink.
+  The section headers stay at 1.2rem so the tier-1 card titles outrank them.
+- **Section header as one line**: `h2` and its hint side by side
+  (`display:flex; align-items:baseline`), not stacked; the section's content
+  is the hierarchy, not the heading.
+- **Motion that reveals structure**: items enter with a staggered rise
+  (`opacity 0→1`, `translateY(10px)→0`, ~0.5s ease-out, `45ms × index` delay
+  via a `--i` custom property); hover lifts a card 2–3px, draws a 3px accent
+  line along its top edge (`::before` with `transform: scaleX(0→1)` from the
+  left), and nudges the arrow glyph `translateX(3px)`; a row shifts its
+  left padding instead of lifting. `:active` scales to `.99`. All of it off
+  under `prefers-reduced-motion`; animate only `transform`/`opacity`.
+- **Relative dates** on anything living (`hoy`, `hace 3 d`, then the ISO
+  date past 30 days), read from the file's mtime, so freshness is visible
+  without a "last updated" sentence.
+- **Emoji as glyph, not decoration**: one per tier-1 card, inside the title,
+  chosen to identify the page in a tab strip; none on tiers 2–4.
+- **Dot grid as the one background device** (`radial-gradient` at ~6% ink,
+  24px cell, theme-aware), so the tiers float on a measured surface instead
+  of a flat wall.
+
+
 ### Feel — the Apple pass (from the fluid-interfaces playbook)
 
 - **Press feedback on pointer-down, not release**: anything clickable (nav
