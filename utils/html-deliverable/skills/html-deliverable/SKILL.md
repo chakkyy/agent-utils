@@ -97,7 +97,7 @@ Apple pass" below for the interaction half):
 
 Match the theme to what the content IS: an analysis that argues with numbers, a
 postmortem, and a pitch are different documents and should look different.
-Five themes; don't repeat the same look twice in a row unless the page belongs
+Six themes; don't repeat the same look twice in a row unless the page belongs
 to a series.
 
 | Theme | When | Recipe |
@@ -107,6 +107,25 @@ to a series.
 | `terminal` | QA, debugging, live technical evidence | Dark `#0d1117`, ink `#e6edf3`, mono as protagonist (Geist Mono or JetBrains Mono), bright brand accent · **bimodal density**: dense mono metadata blocks beside generous empty space · `[ SECTION ]` bracket labels allowed here only |
 | `industrial` | Postmortems, incidents, ops/security material | Newsprint `#f4f4f0`, monolithic sans, ONE hazard accent (red family) · zero border-radius, visible 1–2px dividers · facts live in `dl`/`data`/`kbd`, not prose |
 | `editorial` | Long-read docs, narrative proposals | Characterful serif for display ONLY (Newsreader/Fraunces) + sans body · warm bone paper `#f7f6f3`, off-black ink (never `#000`) · 1px `#eaeaea` borders, washed pastel tags · more leading |
+| `print` | Personal reports, research digests, retrospectives, insights — pages where a memorable identity beats reading speed | Two-ink editorial print, adapted from the mono-color skill (github.com/yanliudesign/mono-color-skill) · neutral paper substrate + exactly TWO inks: dominant (~80%) carries text, rules and halftone screens; accent (~20%) carries section numerals, ONE key stat, alerts · zero radius, no cards, no shadows — ruled rows and hairlines only · bar fills are halftone dot screens; hero = one screened object crossed by an oversized display word (registration-drift echo as the one imperfection) · uppercase mono microcopy and numbered section headers allowed here only · ONE manual gesture max (hand-drawn circle around one number) · dark toggle = negative plate (swap paper/ink) |
+
+**`print` recipes** — three validated ink/type/layout combos; **A is the default**,
+pick B or C only when the content leans that way:
+
+- **A poster** (default): Cool Gray `#E9E9E5` · Charcoal `#30343A` + Signal Red
+  `#C83232` · layout "ruled information poster" (halftone disc crossed by the
+  headline, ruled metadata band, date subordinate) · Archivo + IBM Plex Mono.
+- **B one-ink**: Neutral White `#FAFAF7` · Cobalt `#2148B8` alone — everything
+  is one ink; drift renders as a pale second impression · layout "type-led
+  declaration" (stacked two-line headline owns the page, small screened object
+  grounds it) · Archivo at 125% width.
+- **C journal**: Pale Beige `#F5F1E8` · Oxblood `#6E2A2A` text + Botanical Green
+  `#008A4B` graphics · layout "editorial journal" (serif italic lowercase title,
+  framed halftone plate with mono caption, reading columns) · Fraunces + mono.
+
+Build the halftone hero as an inline SVG dot grid (dot radius grows with distance
+from a highlight point, clipped to the shape); bar fills reuse the screen as a
+`radial-gradient` dot pattern.
 
 **Register dials, not themes** — two operations on top of any theme: `quieter`
 (desaturate 70–85%, drop each weight one step, flatten shadows — the default
