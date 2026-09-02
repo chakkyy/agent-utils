@@ -1,7 +1,7 @@
 {
   "name": "html-deliverable",
-  "version": "1.0.0",
-  "description": "Turns 'make me an HTML page' into a polished single-file local page — invariant structure, four themes, evidence-first content.",
+  "version": "1.1.0",
+  "description": "Turns 'make me an HTML page' into a polished single-file local page — invariant structure, six themes, evidence-first content.",
   "license": "MIT",
   "author": {
     "name": "Carlos Ramirez",
