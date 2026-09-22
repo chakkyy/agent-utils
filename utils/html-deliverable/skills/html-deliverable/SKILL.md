@@ -97,7 +97,7 @@ Apple pass" below for the interaction half):
 
 Match the theme to what the content IS: an analysis that argues with numbers, a
 postmortem, and a pitch are different documents and should look different.
-Six themes; don't repeat the same look twice in a row unless the page belongs
+Eight themes; don't repeat the same look twice in a row unless the page belongs
 to a series.
 
 | Theme | When | Recipe |
@@ -108,6 +108,8 @@ to a series.
 | `industrial` | Postmortems, incidents, ops/security material | Newsprint `#f4f4f0`, monolithic sans, ONE hazard accent (red family) · zero border-radius, visible 1–2px dividers · facts live in `dl`/`data`/`kbd`, not prose |
 | `editorial` | Long-read docs, narrative proposals | Characterful serif for display ONLY (Newsreader/Fraunces) + sans body · warm bone paper `#f7f6f3`, off-black ink (never `#000`) · 1px `#eaeaea` borders, washed pastel tags · more leading |
 | `print` | Personal reports, research digests, retrospectives, insights — pages where a memorable identity beats reading speed | Two-ink editorial print, adapted from the mono-color skill (github.com/yanliudesign/mono-color-skill) · neutral paper substrate + exactly TWO inks: dominant (~80%) carries text, rules and halftone screens; accent (~20%) carries section numerals, ONE key stat, alerts · zero radius, no cards, no shadows — ruled rows and hairlines only · bar fills are halftone dot screens; hero = one screened object crossed by an oversized display word (registration-drift echo as the one imperfection) · uppercase mono microcopy and numbered section headers allowed here only · ONE manual gesture max (hand-drawn circle around one number) · dark toggle = negative plate (swap paper/ink) |
+| `tablero` | System status, programme dashboards, measurement reports — pages where the numbers ARE the argument and the reader scans before reading | Dark canvas `#0b0d10` with two surfaces `#12151a` / `#181c23`, ink `#eef1f5`, hairlines `#242a33` · sans display (Space Grotesk or Geist) + mono numerals (JetBrains Mono) at `clamp(56px, 11vw, 150px)`, `tabular-nums`, tracking `-.04em` · the page opens with a **bento of stat cells, one number per cell**, and the cell count equals the number of facts (never an empty tile) · each cell earns a different surface: one radial gradient in the accent, one dot-grid `radial-gradient` pattern, one accent-bordered, the rest flat · ONE desaturated accent (electric blue `#5b8def`), ONE radius (14px) · prose only after the grid; a 4-box flow strip carries the before/after · optional staggered entry (opacity + `translateY`, 70ms × index) |
+| `changelog` | Proposing or announcing a change to a tool, rule, config or process — pages that must show what it was against what it becomes | Light `#fcfcfc`, ink `#18181b`, hairlines `#e4e4e7`, code surface `#f4f4f5` · Geist + Geist Mono, body 15px, h1 34px, h2 20px with a top rule · two columns: 220px sticky index on the left (version label + section anchors), 720px reading column on the right · the evidence component is the **diff block** instead of a table: a mono card with a caption bar, removed lines tinted red, added lines tinted the accent, one block per change · status pills sit inline beside the change name · fixed section spine: what broke, changes, what stays, how it is adopted, status · ONE accent (green `#15803d`), ONE radius (6px) |
 
 **`print` recipes** — three validated ink/type/layout combos; **A is the default**,
 pick B or C only when the content leans that way:
@@ -126,6 +128,13 @@ pick B or C only when the content leans that way:
 Build the halftone hero as an inline SVG dot grid (dot radius grows with distance
 from a highlight point, clipped to the shape); bar fills reuse the screen as a
 `radial-gradient` dot pattern.
+
+**Chrome exceptions, declared per theme.** `changelog` replaces the pill nav with
+its left sticky index (the index IS the nav, so the page keeps one navigation
+device, not two) and drops the light/dark toggle in favour of
+`prefers-color-scheme` alone. `tablero` is dark-locked for the same reason
+`industrial` is paper-locked: the surfaces carry meaning. Everything else in the
+invariant still holds for both, footer wordmark included.
 
 **Register dials, not themes** — two operations on top of any theme: `quieter`
 (desaturate 70–85%, drop each weight one step, flatten shadows — the default
@@ -347,6 +356,37 @@ are illustrative sample data, labeled as such — never copy them into a real
 deliverable.
 
 ## Content rules
+
+### The reader has not read the source (mandatory for explainers)
+
+The reader is a developer who never opened the source. Explain what the SOURCE
+proposes (its metric, mechanism, claim), not what a test, a PR or CI is.
+Checked before opening the file:
+
+- **The source's own concept comes first, in plain words**: 2 or 3 sentences
+  on the mechanism, middle register leaning simple. Developer vocabulary stays
+  unexplained (test, PR, merge, CI, staging, coverage); the source's mechanism
+  is told without formulas, variable names or untranslated acronyms. Right:
+  "it combines two things: how many paths the code has and how much test
+  coverage; many paths and little coverage score high, the line is at 30".
+  Too hard: "cyclomatic complexity squared times missing coverage cubed". Too
+  easy: "automated tests, which are small programs that...".
+- **What gets one clause of explanation, the first time only**: the source's
+  own terms, the project's bots and file names, acronyms that are not
+  universal.
+- **Desktop layout when the reader reads on desktop**: a container around
+  1400 px, chapters in two columns (prose left, headline number and decision
+  right). Never a narrow 800 px column in the middle of a wide screen, and
+  never shrink the layout when shortening the text.
+- **A number never stands alone**: what it measures, out of what total, what
+  it means. "53" is noise; "53 of 4,848 methods, 28 in the payroll sync" is
+  information.
+- **One headline number per chapter**, in display size, at most one secondary
+  in smaller type. Never a table where every number carries the same visual
+  weight: the reader cannot tell what matters.
+- **Hard length budget for source explainers: about 450 words of prose on the
+  whole page**, one screen per source at most, no glossary. Cut sentences
+  before cutting numbers.
 
 - Real data only: if a number matters, verify it before publishing it (and
   when in doubt, say exactly what it measures: "565 rendered instances, 263
