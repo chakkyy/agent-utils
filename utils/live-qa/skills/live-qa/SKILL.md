@@ -54,6 +54,31 @@ Solved in `kit-template.mjs`; listed so nobody re-derives them:
 7. Adjudicate an app-state change from the URL plus a screenshot, both taken after the click —
    the click that "did nothing" may have hit a look-alike control (see trap 4).
 
+## Exploratory sweep with e2e (TesterArmy)
+
+`e2e` (github.com/tester-army/e2e, open source, verified v0.15.2) adds an AI agent on top of
+Playwright: `e2e explore '<goal>'` drives the app on its own and reports findings. Use it to
+**find** candidates for the batteries above, never as the verdict.
+
+- **Setup** (in the app repo, Node >= 22.12): `npm i -D -E e2e @e2e-dev/web ai @ai-sdk/openai`, an
+  `e2e.config.ts` with one target per device (`web({ viewport })`, `web({ browser: 'webkit', ... })`
+  for iPhone) pointing at the deployed URL, and a model in `agents.default.model` (a ChatGPT
+  subscription via `chatgpt()` from `e2e/oauth/chatgpt` + `npx e2e login openai`, or an API key).
+  Claude subscriptions are not supported by e2e; Claude needs an Anthropic API key.
+- **Telemetry is on by default** — always run with `E2E_TELEMETRY_DISABLED=1`.
+- **Deterministic tests** (`*.e2e.ts` with `screen`/`expect`) need no model — use them as the smoke step.
+- **Explore**: one goal per run, written as a persona + what to break, `--target <device>
+  --max-steps 12 --timeout 900000 --output .e2e/explore-<device> --reporter json,markdown`. Run
+  devices in parallel; each takes ~10–15 min. Findings are `kind: "issue"` in the report, but
+  **failed steps also hide findings** in their `summary` text — read both.
+- **Re-adjudicate every finding with a Playwright repro before acting** (first real run: 4
+  findings, 3 false positives):
+  - links with `target="_blank"` read as "did nothing" — the agent never sees the new tab; check
+    with `context.waitForEvent('page')`;
+  - "control X intercepted my tap" when the agent tapped a non-interactive heading next to it;
+  - "no button to continue" when the run hit its step budget mid-flow — re-drive the flow to the end.
+  Only a reproduced finding becomes a case (and a failing test before the fix).
+
 ## Entry recipes per app
 
 Each app needs an entry recipe before its first run: test users, how auth works (magic link, OTP,
