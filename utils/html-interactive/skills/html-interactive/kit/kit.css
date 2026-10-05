@@ -276,7 +276,7 @@ noscript p { max-width: 60ch; margin: 64px auto; padding: 0 24px; }
   body { padding-bottom: 0; }
 }
 
-/* 1.1 · clearer actions in the base list */
+/* base list: options read as clear radio cards */
 .hi-opt-body { position: relative; padding: 11px 14px 11px 40px; border: 1.5px solid rgb(var(--hi-ink) / .14); color: rgb(var(--hi-ink) / .85); }
 .hi-opt-body::before { content: ""; position: absolute; left: 14px; top: 13px; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgb(var(--hi-ink) / .35); background: var(--hi-surface); transition: border-color .12s ease, box-shadow .12s ease; }
 .hi-opt:hover .hi-opt-body { border-color: color-mix(in srgb, var(--hi-acc) 55%, transparent); }
@@ -307,66 +307,44 @@ noscript p { max-width: 60ch; margin: 64px auto; padding: 0 24px; }
 .hi-l-matrix .hi-opt-body::before { left: 10px; top: 50%; margin-top: -6px; width: 12px; height: 12px; }
 .hi-l-matrix .hi-note { min-height: 0; height: 40px; font-size: .85rem; }
 
-/* focus: one question per screen, big targets, keys 1-9 */
-.hi-focus .hi-statline { display: none; }
-.hi-focus .hi-item { display: none; }
-.hi-focus .hi-section:not(#hi-notes):not(:has(.is-current)) { display: none; }
-.hi-focus .hi-section { padding-top: 24px; }
-.hi-focus .hi-sh { border: 0; justify-content: center; }
-.hi-focus .hi-sh .hi-count, .hi-focus .hi-sh .hi-hint { display: none; }
-.hi-focus .hi-sh h2 { font-size: .8rem; font-weight: 500; letter-spacing: .06em; color: rgb(var(--hi-ink) / .5); }
-.hi-focus .hi-item.is-current { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; max-width: 780px; margin: 0 auto; padding: 4vh 0 2vh; border: 0; }
-.hi-focus .is-current .hi-k { display: none; }
-.hi-focus .is-current h3 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); line-height: 1.08; letter-spacing: -.03em; }
-.hi-focus .is-current .hi-q p { font-size: 1.05rem; }
-.hi-focus .is-current .hi-a { position: static; gap: 12px; }
-.hi-focus .is-current .hi-opts { counter-reset: opt; gap: 10px; }
-.hi-focus .is-current .hi-opt { counter-increment: opt; }
-.hi-focus .is-current .hi-opt-body { min-height: 64px; align-items: center; padding: 14px 18px 14px 60px; font-size: 1.1rem; border-radius: 14px; }
-.hi-focus .is-current .hi-opt-body::before { content: counter(opt); display: grid; place-items: center; left: 16px; top: 50%; margin-top: -14px; width: 28px; height: 28px; border-radius: 8px; font: 600 .85rem var(--hi-mono); color: rgb(var(--hi-ink) / .6); }
-.hi-focus .is-current .hi-opt input:checked + .hi-opt-body::before { box-shadow: none; color: var(--hi-acc-ink); }
-.hi-focus .is-current .hi-seg { counter-reset: opt; }
-.hi-dots { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 8px 0 0; }
-.hi-dot { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 1.5px solid rgb(var(--hi-ink) / .3); background: none; cursor: pointer; transition: transform .12s ease-out, background-color .12s ease; }
-.hi-dot.is-done { background: var(--hi-acc); border-color: var(--hi-acc); }
-.hi-dot.is-on { transform: scale(1.4); border-color: rgb(var(--hi-ink)); }
-.hi-stepnav { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 24px 0 8px; }
-.hi-step-n { font-size: .9rem; color: rgb(var(--hi-ink) / .6); min-width: 64px; text-align: center; }
-.hi-stepnav .hi-btn:disabled { opacity: .4; cursor: default; }
 @media (max-width: 900px) { .hi-l-matrix .hi-item, .hi-l-matrix .hi-item.is-compact { grid-template-columns: 1fr; } }
-/* focus: a fixed stage so moving between questions never shifts the page */
-.hi-focus .hi-hero { padding: 32px 0 0; }
-.hi-focus .hi-hero .hi-lede { display: none; }
-.hi-focus .hi-section:has(.is-current) { height: max(420px, calc(100vh - var(--hi-shell-h) - var(--hi-dock-h) - 230px)); display: grid; grid-template-rows: auto minmax(0, 1fr); padding-top: 16px; }
-.hi-focus .hi-section:has(.is-current) .hi-items { display: grid; align-content: safe center; overflow-y: auto; overscroll-behavior: contain; }
-.hi-focus .hi-item.is-current { padding: 0; width: 100%; }
-.hi-focus .hi-stepnav { position: sticky; bottom: calc(var(--hi-dock-h) + 8px); }
-/* focus 1.1.2: compact so four or five options fit without scrolling */
-.hi-focus .hi-hero { padding: 14px 0 0; display: flex; align-items: center; gap: 16px; }
-.hi-focus .hi-hero h1 { font-size: 1rem; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; color: rgb(var(--hi-ink) / .6); }
-.hi-focus .hi-dots { padding: 4px 0 0; }
-.hi-focus .hi-section:has(.is-current) { height: max(380px, calc(100vh - var(--hi-shell-h) - var(--hi-dock-h) - 150px)); padding-top: 8px; }
-.hi-focus .hi-item.is-current { gap: 18px; }
-.hi-focus .is-current h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); }
-.hi-focus .is-current .hi-q p { font-size: .98rem; margin-top: 6px; }
-.hi-focus .is-current .hi-opts { gap: 8px; }
-.hi-focus .is-current .hi-opt-body { min-height: 50px; padding: 10px 16px 10px 54px; font-size: 1rem; border-radius: 12px; align-items: baseline; }
-.hi-focus .is-current .hi-opt-body::before { width: 26px; height: 26px; margin-top: -13px; left: 14px; }
-.hi-focus .is-current .hi-opt-detail { flex-basis: auto; font-size: .88rem; }
-.hi-focus .hi-stepnav { padding: 14px 0 6px; }
 
-/* focus 1.1.2: when a question does not fit, split it into two columns so the options never scroll out of view */
+/* focus: one question per screen that fits without page scroll, keys 1-9 */
+.hi-focus .hi-statline, .hi-focus .hi-hero .hi-lede, .hi-focus .hi-item, .hi-focus .is-current .hi-k, .hi-focus .hi-sh .hi-count, .hi-focus .hi-section:not(#hi-notes) .hi-hint { display: none; }
+.hi-focus .hi-hero { padding: 14px 0 0; }
+.hi-focus .hi-hero h1 { font-size: 1rem; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; color: rgb(var(--hi-ink) / .6); }
+.hi-focus .hi-section:not(#hi-notes):not(:has(.is-current)) { display: none; }
+.hi-focus .hi-section:has(.is-current) { height: max(380px, calc(100vh - var(--hi-shell-h) - var(--hi-dock-h) - 150px)); display: grid; grid-template-rows: auto minmax(0, 1fr); padding-top: 8px; }
+.hi-focus .hi-section:has(.is-current) .hi-items { display: grid; align-content: safe center; overflow-y: auto; overscroll-behavior: contain; }
+.hi-focus .hi-sh { border: 0; justify-content: center; }
+.hi-focus .hi-sh h2 { font-size: .8rem; font-weight: 500; letter-spacing: .06em; color: rgb(var(--hi-ink) / .5); }
+.hi-focus .hi-item.is-current { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; width: 100%; max-width: 780px; margin: 0 auto; padding: 0; border: 0; }
+.hi-focus .is-current h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.08; letter-spacing: -.03em; }
+.hi-focus .is-current .hi-q p { font-size: .98rem; margin-top: 6px; }
+.hi-focus .is-current .hi-a { position: static; gap: 10px; }
+.hi-focus .is-current .hi-opts, .hi-focus .is-current .hi-seg { counter-reset: opt; }
+.hi-focus .is-current .hi-opts { gap: 8px; }
+.hi-focus .is-current .hi-opt { counter-increment: opt; }
+.hi-focus .is-current .hi-opt-body { min-height: 50px; align-items: baseline; padding: 10px 16px 10px 54px; font-size: 1rem; border-radius: 12px; }
+.hi-focus .is-current .hi-opt-body::before { content: counter(opt); display: grid; place-items: center; left: 14px; top: 50%; margin-top: -13px; width: 26px; height: 26px; border-radius: 8px; font: 600 .85rem var(--hi-mono); color: rgb(var(--hi-ink) / .6); }
+.hi-focus .is-current .hi-opt input:checked + .hi-opt-body::before { box-shadow: none; color: var(--hi-acc-ink); }
+.hi-focus .is-current .hi-opt-detail { flex-basis: auto; font-size: .88rem; }
+.hi-focus .is-current .hi-ev img { max-height: 120px; }
 .hi-focus .hi-item.is-current.is-tall { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; max-width: 1180px; }
 .hi-focus .is-tall .hi-q { position: sticky; top: 0; }
 .hi-focus .is-tall .hi-q > p { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .hi-focus .is-tall.is-open .hi-q > p { display: block; -webkit-line-clamp: unset; }
 .hi-focus .is-tall .hi-ev { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); max-width: 420px; margin-top: 12px; }
-.hi-focus .is-current .hi-ev img { max-height: 120px; }
 .hi-more { margin-top: 8px; padding: 0; border: 0; background: none; color: var(--hi-acc); font: inherit; font-size: .9rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
-@media (max-width: 900px) { .hi-focus .hi-item.is-current.is-tall { grid-template-columns: minmax(0, 1fr); } }
-/* focus: the free notes box lines up with the question column */
 .hi-focus #hi-notes { max-width: 780px; margin: 0 auto; }
-.hi-focus #hi-notes .hi-sh { justify-content: flex-start; border: 0; padding-bottom: 8px; }
+.hi-focus #hi-notes .hi-sh { justify-content: flex-start; padding-bottom: 8px; }
 .hi-focus #hi-notes .hi-sh h2 { font-size: 1rem; letter-spacing: 0; color: rgb(var(--hi-ink) / .7); }
-.hi-focus #hi-notes .hi-sh .hi-hint { display: inline; font-size: .88rem; }
 .hi-focus #hi-notes .hi-text { margin-top: 8px; max-width: none; }
+.hi-dots { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 4px 0 0; }
+.hi-dot { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 1.5px solid rgb(var(--hi-ink) / .3); background: none; cursor: pointer; transition: transform .12s ease-out, background-color .12s ease; }
+.hi-dot.is-done { background: var(--hi-acc); border-color: var(--hi-acc); }
+.hi-dot.is-on { transform: scale(1.4); border-color: rgb(var(--hi-ink)); }
+.hi-stepnav { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 14px 0 6px; position: sticky; bottom: calc(var(--hi-dock-h) + 8px); }
+.hi-step-n { font-size: .9rem; color: rgb(var(--hi-ink) / .6); min-width: 64px; text-align: center; }
+.hi-stepnav .hi-btn:disabled { opacity: .4; cursor: default; }
+@media (max-width: 900px) { .hi-focus .hi-item.is-current.is-tall { grid-template-columns: minmax(0, 1fr); } }
