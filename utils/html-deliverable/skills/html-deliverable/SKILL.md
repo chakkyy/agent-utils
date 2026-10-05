@@ -4,446 +4,54 @@ description: Build a polished single-file local HTML page to communicate or visu
 license: MIT
 ---
 
-# HTML deliverable — the recipe
+# HTML deliverable
 
-One local HTML file, everything in a single file, opened in the browser when done.
-**Local file > hosted artifact**: no CSP restrictions, CDN fonts and icons work,
-and the result looks far better. Only reach for a hosted/shareable artifact if
-the user needs a URL and asks for one.
+One self-contained local HTML file, opened in the browser when done. A local file beats a hosted artifact (no CSP, CDN fonts work); host it only when the user asks for a URL.
+If the reader has to decide, score or tick and the result must come back to the chat, use `html-interactive` instead.
 
-**Reader has to act, not just read?** If the page asks the reader to decide,
-choose, score, tick or annotate and the result must come back to the chat, use
-the `html-interactive` skill instead: it owns state, progress and export.
+## Steps
 
-## Where to save it
+1. **Receipts.** If the page carries data, numbers or a recommendation, every claim links its source and the evidence comes before the proposal. It gets its own section only when the reader audits (QA, postmortems, reviews); otherwise sources ride as chips beside the claims.
+2. **Brand.** Resolve it (section below).
+3. **Theme.** Pick one from the table by what the content IS; read only its recipe in [themes.md](themes.md). When the user is present, ask once with your recommendation first; otherwise decide. Declare it in a `<head>` comment.
+4. **Build** the invariant structure with components, following [components.md](components.md). Clone the patterns of [reference.html](reference.html). Slides: [slides.md](slides.md). Explaining an outside source: [explainers.md](explainers.md).
+5. **Prose.** Plain, precise, sentence case, zero em or en dashes. Run a humanizer pass if one is available.
+6. **Open** it, then iterate on the same file.
 
-Wherever the user says; if they don't, in the project's workspace root with a
-short, descriptive name (`kickoff-ds.html`, `qa-guide-checkout.html`). Keep it
-out of version control — don't commit it unless explicitly asked.
+## Brand
 
-## Invariant structure + variable theme
+Colors and type come from the brand of the content. Stop at the first hit:
+1. The content's brand: `DESIGN.md`, `branding/`, `tokens.css` or a brand guide in the project or brief. Its accent and fonts replace the theme's; the theme keeps format and surfaces.
+2. A brand file the user keeps, if any (for example `~/.claude/brand.md`).
+3. The theme's own palette.
 
-The STRUCTURE is always the same. The STYLE varies by theme.
+## Themes
 
-### Choosing the theme
-
-- **User active in the session**: ask one question (via the harness's
-  question tool if available, otherwise a short plain-text question):
-  recommend one theme based on the content with a one-line why, list the
-  rest, and leave room for a custom theme in the user's own words. Repeating
-  the previous theme is fine when the subject is the same or the page belongs
-  to a series — consistency beats novelty there.
-- **Autonomous run** (a goal-mode task, scheduled job, unattended session):
-  decide alone from the theme table's "When" column — never block the flow on
-  a question; record the choice and the one-line reason in the `<head>`
-  comment.
-
-### Invariant (every theme)
-
-- Header shell (project wordmark left, mono metadata + toggle right) · pill
-  nav with anchors when there are 4+ sections · sections with
-  `scroll-margin-top` · footer mirroring the wordmark.
-- **The shell is sticky**: header (and pill nav, if present) stay pinned while
-  scrolling as translucent material (blur + saturate, content passes under),
-  so the light/dark toggle and the anchors are always reachable. Solid
-  fallbacks under `prefers-reduced-transparency` / `prefers-contrast: more`.
-- **Light/dark toggle** (default-on): a small button at the right end of the
-  header shell switches color scheme. Initial state follows
-  `prefers-color-scheme`; the choice persists in `localStorage`. Implement by
-  re-declaring the CSS variables under `html[data-theme="dark"]` (inverse for
-  dark-first themes like terminal) — content styles read only the variables.
-  Sun/moon glyph swap + `aria-pressed`; transition `background`/`color` at
-  ~150ms ease-out, none under `prefers-reduced-motion`.
-- Evidence as tables: caption below, sentence-case headers, numeric column
-  `.num` right-aligned + mono `tabular-nums`. Big stats in a statline with
-  dividers.
-- Prose at 60–68 characters per line. Thin borders and whitespace over
-  shadows; no nested cards.
-- **One single accent = the project's brand color** (no brand? use one
-  restrained blue), only where it means something, always with a non-color
-  signal next to it. Semantic colors (ok/warn/error) are separate.
-- Forbidden: ALL-CAPS eyebrows, decorative em-dashes, decorative gradients,
-  glass effects, arbitrary icons, decorative section numbering, mini-sized
-  prose.
-- Voice: precise, calm, no hype; sentence case; write in the user's language.
-  **Product language everywhere**: labels of flows, steps and tags name the
-  effect on the product/user ("the new site is already live", never "flip
-  URL_ADMIN"); infra terms and commands get translated or moved into a
-  `<details>`. The test: a PM reads any component without asking what a step
-  means — if they'd ask, the label is wrong.
-- **Content-related favicon** (mandatory): pick one that represents the
-  document's topic so the reader can tell tabs apart when several deliverables
-  are open. Any source works — an emoji embedded as an SVG data URI
-  (`<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">`),
-  an external icon URL, or the project's real favicon (local HTML has no CSP,
-  so external sources are fine).
-- Icons via `iconify-icon` from CDN
-  (`https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js`) only
-  when the icons ARE content; when comparing sets, label each with its library
-  in small mono.
-
-### Apple visual base (shared by every theme)
-
-Every theme is a variation on the same Apple-derived base (see "Feel — the
-Apple pass" below for the interaction half):
-
-- Display type large and tight: `-0.02em` to `-0.035em` tracking, line-height
-  1.02–1.1, hierarchy built from size + weight + leading as a set. Body at
-  15–16px, line-height 1.5–1.65.
-- Sticky chrome as translucent material (blur + saturate), content scrolling
-  under; solid fallbacks for reduced transparency / more contrast.
-- Rounded concentric radii (outer = inner + padding), generous whitespace,
-  thin borders; depth from layering, never from heavy shadows.
-- Font stacks always end in `system-ui` so the page degrades to the platform
-  face gracefully.
-
-### Themes (pick one, declare it in a comment in the `<head>`)
-
-Match the theme to what the content IS: an analysis that argues with numbers, a
-postmortem, and a pitch are different documents and should look different.
-Nine themes; don't repeat the same look twice in a row unless the page belongs
-to a series.
-
-| Theme | When | Recipe |
-|---|---|---|
-| `apple` (default) | Kickoffs, plans, working docs, pitches, demos | Geist Sans + Geist Mono · white `#fff`, ink `#171717`, borders `#eaeaea` · **display dial**: working docs at weight 600 / ~2.5rem display; pitches at 800 / 3.5rem+ with huge stats and a more present accent |
-| `swiss` | Analyses, comparisons, audits — pages that argue with numbers | Light stone canvas `#fafaf9` · hierarchy by **opacity of one ink** (100 / 70 / 45%), never a second gray ramp · headings weight 300–400, never bold · strict 8px grid, radius 0–4px · accent at 10–60% opacity, full strength only on the verdict |
-| `terminal` | QA, debugging, live technical evidence | Dark `#0d1117`, ink `#e6edf3`, mono as protagonist (Geist Mono or JetBrains Mono), bright brand accent · **bimodal density**: dense mono metadata blocks beside generous empty space · `[ SECTION ]` bracket labels allowed here only |
-| `industrial` | Postmortems, incidents, ops/security material | Newsprint `#f4f4f0`, monolithic sans, ONE hazard accent (red family) · zero border-radius, visible 1–2px dividers · facts live in `dl`/`data`/`kbd`, not prose |
-| `editorial` | Long-read docs, narrative proposals | Characterful serif for display ONLY (Newsreader/Fraunces) + sans body · warm bone paper `#f7f6f3`, off-black ink (never `#000`) · 1px `#eaeaea` borders, washed pastel tags · more leading |
-| `print` | Personal reports, research digests, retrospectives, insights — pages where a memorable identity beats reading speed | Two-ink editorial print, adapted from the mono-color skill (github.com/yanliudesign/mono-color-skill) · neutral paper substrate + exactly TWO inks: dominant (~80%) carries text, rules and halftone screens; accent (~20%) carries section numerals, ONE key stat, alerts · zero radius, no cards, no shadows — ruled rows and hairlines only · bar fills are halftone dot screens; hero = one screened object crossed by an oversized display word (registration-drift echo as the one imperfection) · uppercase mono microcopy and numbered section headers allowed here only · ONE manual gesture max (hand-drawn circle around one number) · dark toggle = negative plate (swap paper/ink) |
-| `tablero` | System status, programme dashboards, measurement reports — pages where the numbers ARE the argument and the reader scans before reading | Dark canvas `#0b0d10` with two surfaces `#12151a` / `#181c23`, ink `#eef1f5`, hairlines `#242a33` · sans display (Space Grotesk or Geist) + mono numerals (JetBrains Mono) at `clamp(56px, 11vw, 150px)`, `tabular-nums`, tracking `-.04em` · the page opens with a **bento of stat cells, one number per cell**, and the cell count equals the number of facts (never an empty tile) · each cell earns a different surface: one radial gradient in the accent, one dot-grid `radial-gradient` pattern, one accent-bordered, the rest flat · ONE desaturated accent (electric blue `#5b8def`), ONE radius (14px) · prose only after the grid; a 4-box flow strip carries the before/after · optional staggered entry (opacity + `translateY`, 70ms × index) |
-| `changelog` | Proposing or announcing a change to a tool, rule, config or process — pages that must show what it was against what it becomes | Light `#fcfcfc`, ink `#18181b`, hairlines `#e4e4e7`, code surface `#f4f4f5` · Geist + Geist Mono, body 15px, h1 34px, h2 20px with a top rule · two columns: 220px sticky index on the left (version label + section anchors), 720px reading column on the right · the evidence component is the **diff block** instead of a table: a mono card with a caption bar, removed lines tinted red, added lines tinted the accent, one block per change · status pills sit inline beside the change name · fixed section spine: what broke, changes, what stays, how it is adopted, status · ONE accent (green `#15803d`), ONE radius (6px) |
-| `organic` | Chill, friendly pages that are read often or for fun: personal dailies, habit trackers, notes to friends, light status updates. Anything that should feel warm rather than corporate | Warm paper `#EFE8D8`, cards `#F6F1E5`, ink `#2A221C`, hairlines `#D9CFBB` · primary olive `#56652F` (text `#3E4A20`) plus ONE playful second color used sparingly: clay `#D9623B`, soft coral `#FBA38B` for tints · display Fraunces with `font-variation-settings: "SOFT" 100, "WONK" 1`, weight 650-800, line-height .9-1: chunky and rounded, never sharp · body Instrument Sans 15.5px · DM Mono for labels, dates and numbers · big soft cards on the paper, radius 28px, no borders, no shadows · pills and buttons fully round (999px) · sections as two-column cards: 220px side with a small kicker and a display title, content on the right · links as small mono pills tinted with the olive · gentle entry: rise 520ms `cubic-bezier(.19,1,.22,1)`, 70ms × index stagger · dark mode = forest night (paper `#191D13`, cards `#21261A`, olive `#9DB061`, clay `#E8835F`) · reference: drinkolipop.com via Inspo (rounded heavy serif, pastel on warm, pill CTAs) |
-
-**`print` recipes** — three validated ink/type/layout combos; **A is the default**,
-pick B or C only when the content leans that way:
-
-- **A poster** (default): Cool Gray `#E9E9E5` · Charcoal `#30343A` + Signal Red
-  `#C83232` · layout "ruled information poster" (halftone disc crossed by the
-  headline, ruled metadata band, date subordinate) · Archivo + IBM Plex Mono.
-- **B one-ink**: Neutral White `#FAFAF7` · Cobalt `#2148B8` alone — everything
-  is one ink; drift renders as a pale second impression · layout "type-led
-  declaration" (stacked two-line headline owns the page, small screened object
-  grounds it) · Archivo at 125% width.
-- **C journal**: Pale Beige `#F5F1E8` · Oxblood `#6E2A2A` text + Botanical Green
-  `#008A4B` graphics · layout "editorial journal" (serif italic lowercase title,
-  framed halftone plate with mono caption, reading columns) · Fraunces + mono.
-
-Build the halftone hero as an inline SVG dot grid (dot radius grows with distance
-from a highlight point, clipped to the shape); bar fills reuse the screen as a
-`radial-gradient` dot pattern.
-
-**Chrome exceptions, declared per theme.** `changelog` replaces the pill nav with
-its left sticky index (the index IS the nav, so the page keeps one navigation
-device, not two) and drops the light/dark toggle in favour of
-`prefers-color-scheme` alone. `tablero` is dark-locked for the same reason
-`industrial` is paper-locked: the surfaces carry meaning. Everything else in the
-invariant still holds for both, footer wordmark included.
-
-**Register dials, not themes** — two operations on top of any theme: `quieter`
-(desaturate 70–85%, drop each weight one step, flatten shadows — the default
-register for stakeholder docs) and `bolder` (amplify ONE named section — the
-headline finding — with the theme's own scale at full strength while the
-neighbors recede; five bolded things is flat, not bold).
-
-A custom theme is valid when the subject calls for it (e.g. a dark-mode QA
-review shown in dark) — keep the invariant structure, the Apple base and the
-single-accent discipline. Agency-landing maximalism (glass cards, glowing
-orbs, double-bezel buttons) stays out of every theme: these pages optimize
-for scan speed, not "$150k feel".
-
-## Slides and the opening thesis
-
-A projected slide gets the same two seconds a feed post gets: nobody reads it, it has to
-land at a glance. So when the user asks for slides, a presentation or a deck, every slide
-follows the **thesis pattern** (taken from giant-type social carousels, rebuilt on the
-polished theme base, never their social-media look):
-
-1. **One sentence that concludes**, ≤ 12 words, lowercase, weight 600, tracking
-   `-0.04em`, line-height ~1. One phrase inside it in the accent (`<b>` recolored, same
-   weight). Never a label ("Results", "Spend").
-2. **The proof sits beside it or on the next slide**: the bars, the chart, the big
-   number, the table. Useful information is never cut; it is split into claim → proof.
-   Layout: 16:9, `container-type: inline-size`, sizes in `cqw`; split slides at ~1.15fr /
-   1fr with the claim at ~5.2cqw; the opening slide has the claim alone at ~8.4cqw,
-   max-width 15ch.
-3. **Optional aside in parentheses** under the claim, muted and light: the human voice.
-4. **The source goes in the slide footer**, small mono, beside the slide number.
-5. **Say each fact once**: if the claim carries "66%", the big number beside it shows
-   something else (the minutes, the runs).
-
-Out: background photos, whole sentences in yellow/orange, decorative underlines, slides
-with two claims.
-
-**Documents (everything that is not slides):** only the page `h1` becomes the thesis
-sentence with one accent phrase. Section titles stay short labels ("What's missing",
-"What exists"): they are wayfinding and pill-nav entries, and a reader who already opened
-the page does not need to be stopped at each section.
-
-**Expiry clause.** The pattern works because it is rare: once everyone communicates the
-same way, it stops working. If decks start to look all the same, revisit this section
-instead of applying it harder.
-
-## Density: build an infographic, not a report
-
-The reader scans before reading, and mostly does not switch to reading. A
-section that only works when read start to finish has failed, however well
-written it is.
-
-**Default to the visual form.** Reach for prose only when no other form
-carries the meaning:
-
-| What you have | What it becomes |
+| Theme | When |
 |---|---|
-| Counts, totals, "N in M months" | Statline / one big number where the adjective was |
-| Two or more things compared on the same axes | Table |
-| "X is Y" facts: metrics, versions, owners, dates | Key-value grid (`dl.kv`), never sentences |
-| An ordered procedure | Numbered steps, one action each |
-| A sequence in time (cutover, incident, release) | Timeline |
-| A pipeline with stages | Flow: labeled boxes with arrows |
-| A proportion, split or budget | Meter / bar row |
-| Evidence from a source | Blockquote + `cite`, or claim + source chip |
-| Parallel alternatives, limits, caveats | Cards |
-| A state ("blocked", "stopped", "confirmed") | Tag/badge, not an adjective in a sentence |
-| Q&A, decision log, objections | Divider list: `border-bottom` rows, no cards |
-| A rejected option and why | One table row: option · number that kills it |
-| A verdict | The verdict box, once, at the end of its section |
+| `base` | Kickoffs, plans, working docs, pitches. The default |
+| `editorial` | Long reads, narrative proposals; muted and calm |
+| `print` | Personal reports, digests, retros, postmortems; memorable identity |
+| `tablero` | Dashboards, status, metrics, live technical evidence. Dark |
+| `tecnico` | Dev guides, QA, setup docs, technical reviews |
+| `changelog` | Proposing or announcing a change to a tool, rule or process |
+| `organic` | Chill pages read often: dailies, trackers, notes to friends |
+| `joy` | Trips, events, celebrations |
 
-**Budgets, checked before publishing:**
+Do not repeat the previous page's theme unless the pages are a series. Two dials apply on top of any theme: **quieter** (desaturate, drop weights a step; default for stakeholder docs) and **bolder** (one named section at full strength).
 
-- A prose block runs to 3 sentences. At 4, it was a table.
-- Cut every sentence in half, then do it again; what survives is the page.
-- A table cell holds a fragment, ≤ 12 words. A cell with two sentences is a
-  paragraph hiding in a table — rebuild it as claim + source chip, with the
-  long version in a `<details>` if it must exist.
-- A section carries ~120 words of prose total, outside tables and captions.
-- One screenful holds one idea and one visual.
-- A heading never gets restated by its first line: if the heading says it,
-  the first line adds new information or disappears.
-- **The 60-second rule:** the verdict and its three strongest supports must be
-  reachable by scrolling and reading only components — no paragraph on the
-  critical path.
+## Invariant structure
 
-**Say each fact once, in its strongest form.** A number in the statline never
-reappears in a paragraph; a framing sentence lives in one place. Repetition
-reads as padding and trains the reader to skim past things that matter.
+- Header shell: wordmark left, mono metadata and a light/dark toggle right. Sticky, translucent (blur + saturate), solid under `prefers-reduced-transparency` and `prefers-contrast: more`. Pill nav with anchors at 4+ sections; `scroll-margin-top` on sections; footer mirrors the wordmark.
+- Toggle follows `prefers-color-scheme`, persists in `localStorage`, re-declares the CSS variables under `html[data-theme="dark"]`. Locked themes (tablero, changelog, joy) skip it.
+- Apple base: display type large and tight (-0.02 to -0.035em, line-height 1.02-1.1), body 15-16px at 1.5-1.65, concentric radii, thin borders over shadows, font stacks ending in `system-ui`.
+- One accent with meaning, always beside a non-color signal; semantic colors stay separate. Content-related favicon.
+- Only the page `h1` is a thesis sentence with one accent phrase; section titles are short labels.
 
-**The scan test, run before opening:** cover every paragraph and read only the
-headings, tables, statlines and blockquotes. If the argument survives, publish.
-If it collapses, the argument was hiding in prose and belongs in the visuals.
+## Content
 
-Section subtitles earn their line by saying what the section proves, not by
-introducing it. "Four cases, one mechanism" works; "In this section we look at
-the cases" is a line the reader pays for and gets nothing from.
-
-## Component recipes
-
-The vocabulary that replaces prose. Each entry: when it wins, then the
-structural essence (adapt to the theme's variables; full implementations
-accumulate in the reference skeleton).
-
-- **Statline / big number** — totals and headline metrics. Oversized digits
-  (mono, `tabular-nums`, tight tracking) with a small muted caption below;
-  cells divided by hairlines.
-- **Key-value grid** (`dl.kv`) — specs, owners, dates, versions. `dl` in a
-  2-col grid: `dt` small mono muted, `dd` normal; one hairline between rows.
-  Kills every "the X is Y, and the Z is W" sentence.
-- **Timeline** — anything that happens in order over time. Left `2px` rule,
-  a dot per event, date in small mono, one-fragment label; phase changes get
-  the accent dot.
-- **Flow** — pipelines and cutovers. Inline-flex boxes joined by `→` in the
-  faint color; the risky stage carries a tag, not an explanation.
-- **Meter / bar row** — splits, budgets, progress, effort. Label + thin track
-  (`height: 6-8px`) + fill in accent; value at the right in mono. Three bars
-  replace a paragraph of proportions.
-- **Tag / badge** — states. Small mono pill, one muted tint per status FAMILY
-  (ok/warn/err/neutral), text + border in the family color.
-- **Callout** — one warning or instruction. Three lines max: what · why (only
-  if it changes behavior) · what to do next. A callout with a fourth line is a
-  section.
-- **Divider list** — Q&A, decision logs, FAQs, objections. Rows separated by
-  `border-bottom` only; question/label bold or mono, answer muted. No boxes.
-- **Claim + source chip** — evidence tables. The cell states the claim in ≤ 12
-  words; the source is a linked chip (`file:line`, PR, dashboard) beside or
-  below it; the verbatim quote lives in a `<details>` when it matters.
-- **Before / after** (`.ba`) — any "today vs proposed". Two labeled columns,
-  same axes, differences carry the accent.
-- **Verdict box** — the one conclusion. Accent-tinted background, 2-3
-  sentences, once per page (or once per major section in long audits).
-- **Container lines** (optional device, max one per page) — `1px` hairlines at
-  the content edges with tiny corner squares, `pointer-events: none`, behind
-  content. Frames the page as a measured object; counts as the page's one
-  background device.
-- **`kbd`** — literal commands and shortcuts. `1px` border, `4px` radius,
-  mono, faint tint; show the token instead of describing it.
-
-## Design taste (polish pass before opening the file)
-
-The details that separate a designed page from a default-looking one:
-
-- **Hierarchy from size + weight, not color.** One display size for the page
-  title, one for section headers, body at 15–16px. If everything is bold,
-  nothing is. For text shades, prefer opacity steps of one ink (100 / 70 /
-  45%) over a second gray ramp.
-- **Spacing on a scale** (4/8-based) and whitespace does the grouping: the gap
-  between groups is at least 2× the gap inside a group, and each nesting level
-  gets ~1.4× the spacing of its child. Order of tools: space first, background
-  tint second, divider line last — a line only where space alone can't carry
-  the structure.
-- **`color-scheme` synced to the theme** (`light dark` on `:root`, flipped with
-  the toggle) so native scrollbars and form controls match; every interactive
-  element keeps a visible `:focus-visible` ring — never bare `outline: none`.
-- **Typography micro**: `text-wrap: balance` on headings, `text-wrap: pretty`
-  on body; `-webkit-font-smoothing: antialiased` on the root; slight negative
-  letter-spacing (~`-0.02em`) on display sizes only — never letterspace
-  lowercase body text.
-- **Comparable numbers align**: mono `tabular-nums` not just in tables but in
-  statlines and inline metrics, so digits line up and nothing shifts.
-- **Concentric radii**: outer radius = inner radius + padding. A container and
-  its nested element never share the same radius.
-- **Optical over geometric**: nudge glyphs/icons that look off-center; a play
-  triangle or chevron centered by math usually isn't centered to the eye.
-- **Restraint compounds**: thin low-contrast `1px` borders; if any shadow is
-  needed at all, nothing heavier than `0 1px 2px rgba(0,0,0,.04)`.
-- **Links in prose**: real underlines with `text-underline-offset: 2px` and a
-  muted `text-decoration-color` — not bare accent-colored text.
-- **Signature micro-details** (cheap, high-perceived-craft): `::selection`
-  tinted with the accent at low opacity; `scroll-behavior: smooth` for the
-  pill-nav anchors, wrapped in `@media (prefers-reduced-motion: no-preference)`.
-- **One quiet background device** (optional, max one per page): a low-contrast
-  dot grid (`radial-gradient` dots at ~4% ink, 24px cell) or a single soft
-  radial tint of the accent behind the hero, theme-aware via variables. It
-  keeps the canvas from feeling sterile without competing with content. Never
-  mesh/AI-purple gradients, never grain over tables, never two devices.
-
-### Hierarchy — the tiers pass (index and hub pages especially)
-
-A page that shows every item at the same size has no hierarchy, however
-polished each card is. Before styling, sort the content into tiers and give
-each tier its own component; a screenful should read in one glance as "these
-two or three matter, the rest is here if you need it".
-
-| Tier | What goes there | Component |
-|---|---|---|
-| 1 · the things opened every day | 2–3 items, never more | **Hero cards**: large title (1.4–1.6rem, weight 700), one-line purpose, a "Open →" call to action, min-height so they read as a band |
-| 2 · reached often | 4–6 items | **Cards**: normal title, one line, path in mono, state chip |
-| 3 · reached sometimes | any number | **Divider rows**: name + one line on the left, chip + date + arrow on the right; `border-bottom` only, no boxes |
-| 4 · archive and mechanics | the rest | **Collapsed `details`** with a `+`/`−` summary; regeneration commands live inside |
-
-Rules that make the tiers hold:
-
-- **Display `h1`** for the page: `clamp(2.2rem, 4.5vw, 3.4rem)`, weight 800,
-  tracking `-0.035em`, line-height 1.02, a short lede under it in muted ink.
-  The section headers stay at 1.2rem so the tier-1 card titles outrank them.
-- **Section header as one line**: `h2` and its hint side by side
-  (`display:flex; align-items:baseline`), not stacked; the section's content
-  is the hierarchy, not the heading.
-- **Motion that reveals structure**: items enter with a staggered rise
-  (`opacity 0→1`, `translateY(10px)→0`, ~0.5s ease-out, `45ms × index` delay
-  via a `--i` custom property); hover lifts a card 2–3px, draws a 3px accent
-  line along its top edge (`::before` with `transform: scaleX(0→1)` from the
-  left), and nudges the arrow glyph `translateX(3px)`; a row shifts its
-  left padding instead of lifting. `:active` scales to `.99`. All of it off
-  under `prefers-reduced-motion`; animate only `transform`/`opacity`.
-- **Relative dates** on anything living (`hoy`, `hace 3 d`, then the ISO
-  date past 30 days), read from the file's mtime, so freshness is visible
-  without a "last updated" sentence.
-- **Emoji as glyph, not decoration**: one per tier-1 card, inside the title,
-  chosen to identify the page in a tab strip; none on tiers 2–4.
-- **Dot grid as the one background device** (`radial-gradient` at ~6% ink,
-  24px cell, theme-aware), so the tiers float on a measured surface instead
-  of a flat wall.
-
-
-### Feel — the Apple pass (from the fluid-interfaces playbook)
-
-- **Press feedback on pointer-down, not release**: anything clickable (nav
-  pills, `summary`, buttons) gets `:active { transform: scale(.97) }` with a
-  ~100ms ease-out transition. Animate only `transform`/`opacity`.
-- **Leading tracks size inversely**: tight on display (`line-height` 1.05–1.1
-  on the h1), loose on body (1.5–1.65). Hierarchy is size + weight + leading
-  as a set, never size alone.
-- **Scale with the reader**: key font sizes and spacing in `rem`/`em`, so a
-  bumped browser text size enlarges the layout instead of breaking it.
-- **Sticky chrome as material**: if the header or pill nav sticks, translucent
-  background + `backdrop-filter: blur() saturate(180%)` with content scrolling
-  under — a soft scroll edge, not a permanent hard border. Fall back to solid
-  under `prefers-reduced-transparency` and to near-solid + defined border under
-  `prefers-contrast: more`. (Functional translucency on chrome is allowed; the
-  glass-effect ban targets decorative glassmorphism cards.)
-- **Wayfinding labels**: nav pills name the section's contents ("Risks",
-  "Decisions"), never generic umbrellas ("Info", "More"). Every screenful
-  answers: where am I, where can I go, how do I get out.
-
-## Reference skeleton
-
-A complete example lives in [reference.html](reference.html) next to this file.
-Read it before writing the first page of a session and clone its patterns:
-CSS variables, shell header/footer, `.toc`, `.statline`, evidence tables,
-`dl.gloss` (vocabulary), `.ba` (before/after), `.card.dec` + `.opts`
-(decisions with a recommended option), `.tag` (status chips), `.ask`
-(requests to other people).
-
-The example happens to explain a planning question — but that's just one
-deliverable type. The same structure and patterns serve a kickoff, a QA
-guide, a feature explainer, a comparison, an audit, a post-mortem, meeting
-material: swap the sections, keep the discipline. Its numbers and tickets
-are illustrative sample data, labeled as such — never copy them into a real
-deliverable.
-
-## Content rules
-
-### The reader has not read the source (mandatory for explainers)
-
-The reader is a developer who never opened the source. Explain what the SOURCE
-proposes (its metric, mechanism, claim), not what a test, a PR or CI is.
-Checked before opening the file:
-
-- **The source's own concept comes first, in plain words**: 2 or 3 sentences
-  on the mechanism, middle register leaning simple. Developer vocabulary stays
-  unexplained (test, PR, merge, CI, staging, coverage); the source's mechanism
-  is told without formulas, variable names or untranslated acronyms. Right:
-  "it combines two things: how many paths the code has and how much test
-  coverage; many paths and little coverage score high, the line is at 30".
-  Too hard: "cyclomatic complexity squared times missing coverage cubed". Too
-  easy: "automated tests, which are small programs that...".
-- **What gets one clause of explanation, the first time only**: the source's
-  own terms, the project's bots and file names, acronyms that are not
-  universal.
-- **Desktop layout when the reader reads on desktop**: a container around
-  1400 px, chapters in two columns (prose left, headline number and decision
-  right). Never a narrow 800 px column in the middle of a wide screen, and
-  never shrink the layout when shortening the text.
-- **A number never stands alone**: what it measures, out of what total, what
-  it means. "53" is noise; "53 of 4,848 methods, 28 in the payroll sync" is
-  information.
-- **One headline number per chapter**, in display size, at most one secondary
-  in smaller type. Never a table where every number carries the same visual
-  weight: the reader cannot tell what matters.
-- **Hard length budget for source explainers: about 450 words of prose on the
-  whole page**, one screen per source at most, no glossary. Cut sentences
-  before cutting numbers.
-
-- Real data only: if a number matters, verify it before publishing it (and
-  when in doubt, say exactly what it measures: "565 rendered instances, 263
-  files").
-- **Everything with a source gets a link.** Any PR, ticket, doc, dashboard,
-  config page, file or claim the page mentions that has a URL is a real `<a>` —
-  PR numbers link to the PR, panels to the panel, claims to the doc that backs
-  them. The reader must never have to hunt for an address the page already
-  knows. Verify URLs instead of guessing them (a project key from the repo
-  beats an invented slug); if something genuinely has no URL, it stays plain
-  text — no dead or invented links.
-- Every section answers a question the audience actually has.
-- If the page is for a meeting, close with a "For this meeting" section
-  listing the points to decide.
-- The CDN fonts/icons need internet when the file is opened — say so; offer
-  an offline version with embedded assets only if the user asks.
-
-## When finished
-
-1. Open it so the user sees it immediately — `open <path>` on macOS,
-   `xdg-open <path>` on Linux, `start <path>` on Windows; best-effort, and
-   always report the file path either way.
-2. Iterate on their feedback in the SAME file (no v2 unless asked).
+- Real data, verified; say exactly what a number measures and out of what total.
+- Everything with a URL is a link; never invent one.
+- Every section answers a question the reader has. A meeting page closes with the points to decide.
+- Product language in labels: name the effect on the user, move infra terms into a `<details>`.
+- Save where the user says; otherwise the project's workspace root, never inside a git repo unless asked.
