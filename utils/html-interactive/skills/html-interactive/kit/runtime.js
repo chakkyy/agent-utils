@@ -7,10 +7,11 @@
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   const SCHEMA = 1;
-  const KIT_VERSION = '1.0.0';
+  const KIT_VERSION = '1.1.0';
   const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
   const POSITIONAL_RE = /^(item|q|question|d|decision|opt|option|row|n)?-?\d+$/;
   const CONTROLS = ['choice', 'yesno', 'check', 'score', 'text'];
+  const LAYOUTS = ['list', 'matrix', 'focus'];
   const NOTE_BY_DEFAULT = { choice: true, yesno: true, score: true, check: false, text: false };
 
   const STRINGS = {
@@ -217,6 +218,7 @@
     if (typeof raw.id !== 'string' || !ID_RE.test(raw.id)) errors.push('page: "id" is required and must be a lowercase slug (a-z, 0-9, hyphens); it namespaces the saved answers');
     if (!raw.title || typeof raw.title !== 'string') errors.push('page: "title" is required');
     if (raw.lang && !STRINGS[raw.lang]) warnings.push(`page: lang "${raw.lang}" has no built-in strings; falling back to English (override with "strings")`);
+    if (raw.layout !== undefined && !LAYOUTS.includes(raw.layout)) warnings.push(`page: layout "${raw.layout}" is unknown; use one of ${LAYOUTS.join(', ')} (falling back to list)`);
     if (!Array.isArray(raw.sections) || !raw.sections.length) {
       errors.push('page: "sections" must be a non-empty array');
       return { errors, warnings };
@@ -230,6 +232,7 @@
       else if (sectionIds.has(s.id)) errors.push(`${sw}: duplicate section id "${s.id}"`);
       else sectionIds.add(s.id);
       if (!s.title) errors.push(`${sw}: "title" is required`);
+      if (s.layout !== undefined && (s.layout !== 'list' && s.layout !== 'matrix')) warnings.push(`${sw}: layout "${s.layout}" is not valid for a section; use list or matrix (focus is page-level only)`);
       if (!Array.isArray(s.items) || !s.items.length) return errors.push(`${sw}: "items" must be a non-empty array`);
       s.items.forEach((it, ii) => {
         const iw = `${sw}.items[${ii}]`;
@@ -657,7 +660,8 @@
         painters.push([it.id, (ans) => { if (doc.activeElement !== ta) ta.value = ans && ans.note ? ans.note : ''; }]);
         a.append(ta);
       }
-      return el('article', { class: 'hi-item' + (rich ? '' : ' is-compact'), id: `hi-item-${it.id}`, 'data-id': it.id, 'data-control': it.type }, q, a);
+      const cmp = it.type === 'choice' && it.evidence.length > 1 && it.evidence.length === it.options.length;
+      return el('article', { class: 'hi-item' + (rich ? '' : ' is-compact') + (cmp ? ' is-compare' : ''), style: cmp ? `--n:${it.options.length}` : null, id: `hi-item-${it.id}`, 'data-id': it.id, 'data-control': it.type }, q, a);
     }
 
     function paintItem(id) {
@@ -887,7 +891,8 @@
       const pc = el('small', { class: 'hi-num' });
       pillCounts[s.id] = pc;
       pills.append(el('a', { href: `#${s.id}` }, s.title, pc));
-      return el('section', { id: s.id, class: 'hi-section' },
+      const sl = s.layout === 'list' || s.layout === 'matrix' ? s.layout : page.layout === 'matrix' ? 'matrix' : 'list';
+      return el('section', { id: s.id, class: `hi-section hi-l-${sl}` },
         el('div', { class: 'hi-sh' }, el('h2', { text: s.title }), s.hint ? el('span', { class: 'hi-hint', text: s.hint }) : null, count),
         el('div', { class: 'hi-items' }, s.items.map(renderItem)));
     });
@@ -927,9 +932,59 @@
       e.returnValue = '';
     });
 
+    if (page.layout === 'focus') {
+      const es = page.lang === 'es';
+      const order = page.sections.flatMap((s) => s.items.map((it) => it.id));
+      let i = Math.min(Math.max(0, Number(state.ui.step) || 0), order.length - 1);
+      const main = host.querySelector('main');
+      const node = (k) => doc.getElementById(`hi-item-${order[k]}`);
+      const dots = el('div', { class: 'hi-dots' }, order.map((id, k) => {
+        const d = el('button', { type: 'button', class: 'hi-dot', 'aria-label': `${k + 1}` });
+        d.addEventListener('click', () => { i = k; show(); });
+        return d;
+      }));
+      const n = el('span', { class: 'hi-step-n hi-num' });
+      const prev = el('button', { type: 'button', class: 'hi-btn', text: es ? '← Anterior' : '← Previous' });
+      const next = el('button', { type: 'button', class: 'hi-btn is-primary', text: es ? 'Siguiente →' : 'Next →' });
+      const show = () => {
+        order.forEach((id, k) => {
+          node(k).classList.toggle('is-current', k === i);
+          dots.children[k].className = 'hi-dot' + (k === i ? ' is-on' : '') + (node(k).dataset.state === 'done' ? ' is-done' : '');
+        });
+        n.textContent = `${i + 1} / ${order.length}`;
+        prev.disabled = i === 0;
+        next.disabled = i === order.length - 1;
+        state.ui.step = i;
+        save();
+      };
+      const go = (d) => { const j = i + d; if (j >= 0 && j < order.length) { i = j; show(); } };
+      prev.addEventListener('click', () => go(-1));
+      next.addEventListener('click', () => go(1));
+      main.addEventListener('change', (e) => {
+        if (e.target.type === 'radio' && node(i).contains(e.target)) setTimeout(() => { show(); go(1); }, 320);
+      });
+      doc.addEventListener('keydown', (e) => {
+        if (e.target.closest && e.target.closest('textarea, input[type="text"], dialog')) return;
+        if (/^[1-9]$/.test(e.key)) { const opt = node(i).querySelectorAll('.hi-opt input')[Number(e.key) - 1]; if (opt) opt.click(); }
+        else if (e.key === 'ArrowRight' || e.key === 'Enter') go(1);
+        else if (e.key === 'ArrowLeft') go(-1);
+      });
+      pills.querySelectorAll('a').forEach((a) => a.addEventListener('click', (e) => {
+        const s = page.sections.find((x) => `#${x.id}` === a.getAttribute('href'));
+        if (!s) return;
+        e.preventDefault();
+        i = order.indexOf(s.items[0].id);
+        show();
+      }));
+      main.classList.add('hi-focus');
+      main.querySelector('.hi-hero').after(dots);
+      main.insertBefore(el('div', { class: 'hi-stepnav' }, prev, n, next), doc.getElementById('hi-notes'));
+      show();
+    }
+
     if (rec.newOrphans && store.ok) store.write(KEY, state);
     paintAll();
   }
 
-  return { SCHEMA, KIT_VERSION, slug, strings, validatePage, normalizePage, storageKey, reconcile, progress, isAnswered, importable, acceptRecommended, exportMarkdown, boot };
+  return { SCHEMA, KIT_VERSION, LAYOUTS, slug, strings, validatePage, normalizePage, storageKey, reconcile, progress, isAnswered, importable, acceptRecommended, exportMarkdown, boot };
 });
