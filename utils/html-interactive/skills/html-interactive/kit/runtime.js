@@ -7,7 +7,7 @@
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   const SCHEMA = 1;
-  const KIT_VERSION = '1.1.1';
+  const KIT_VERSION = '1.1.2';
   const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
   const POSITIONAL_RE = /^(item|q|question|d|decision|opt|option|row|n)?-?\d+$/;
   const CONTROLS = ['choice', 'yesno', 'check', 'score', 'text'];
@@ -218,6 +218,13 @@
     if (typeof raw.id !== 'string' || !ID_RE.test(raw.id)) errors.push('page: "id" is required and must be a lowercase slug (a-z, 0-9, hyphens); it namespaces the saved answers');
     if (!raw.title || typeof raw.title !== 'string') errors.push('page: "title" is required');
     if (raw.lang && !STRINGS[raw.lang]) warnings.push(`page: lang "${raw.lang}" has no built-in strings; falling back to English (override with "strings")`);
+    if (raw.layout === 'focus' && Array.isArray(raw.sections)) raw.sections.forEach((s) => (s && Array.isArray(s.items) ? s.items : []).forEach((it) => {
+      if (!isObj(it)) return;
+      const n = Array.isArray(it.options) ? it.options.length : 0;
+      const ctx = [].concat(it.context || []).join(' ').length;
+      if (n > 7) warnings.push(`item "${it.id}": ${n} options is too many for the focus layout; keep it to 7 or use list`);
+      if (ctx > 320) warnings.push(`item "${it.id}": context is ${ctx} characters; in focus it is clamped to 4 lines, so shorten it or move detail into option details`);
+    }));
     if (raw.layout !== undefined && !LAYOUTS.includes(raw.layout)) warnings.push(`page: layout "${raw.layout}" is unknown; use one of ${LAYOUTS.join(', ')} (falling back to list)`);
     if (!Array.isArray(raw.sections) || !raw.sections.length) {
       errors.push('page: "sections" must be a non-empty array');
@@ -947,6 +954,21 @@
       const prev = el('button', { type: 'button', class: 'hi-btn', text: es ? '← Anterior' : '← Previous' });
       const next = el('button', { type: 'button', class: 'hi-btn is-primary', text: es ? 'Siguiente →' : 'Next →' });
       let timer = null;
+      const fit = (item) => {
+        const box = item.closest('.hi-items');
+        item.classList.remove('is-tall', 'is-open');
+        if (box && box.scrollHeight > box.clientHeight + 2) item.classList.add('is-tall');
+        const q = item.querySelector('.hi-q');
+        let more = q.querySelector('.hi-more');
+        const clamped = [...q.querySelectorAll(':scope > p')].some((p) => p.scrollHeight > p.clientHeight + 2);
+        if (item.classList.contains('is-tall') && clamped && !more) {
+          more = el('button', { type: 'button', class: 'hi-more', text: es ? 'Ver más' : 'Show more' });
+          more.addEventListener('click', () => { item.classList.toggle('is-open'); more.textContent = item.classList.contains('is-open') ? (es ? 'Ver menos' : 'Show less') : (es ? 'Ver más' : 'Show more'); });
+          q.append(more);
+        }
+        if (more) more.hidden = !item.classList.contains('is-tall') || !clamped;
+      };
+      win.addEventListener('resize', () => fit(node(i)));
       const paintDots = () => order.forEach((id, k) => {
         dots.children[k].className = 'hi-dot' + (k === i ? ' is-on' : '') + (node(k).dataset.state === 'done' ? ' is-done' : '');
       });
@@ -954,6 +976,7 @@
       const show = () => {
         clearTimeout(timer);
         order.forEach((id, k) => node(k).classList.toggle('is-current', k === i));
+        fit(node(i));
         paintDots();
         n.textContent = `${i + 1} / ${order.length}`;
         prev.disabled = i === 0;
