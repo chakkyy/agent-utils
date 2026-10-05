@@ -6,209 +6,77 @@ license: MIT
 
 # HTML interactive — decisions that come back
 
-A single local HTML file where the reader answers, and one button copies the
-answers as text to paste into the chat. You write **data**; the kit renders the
-page, saves every click, counts progress and builds the export.
+One local HTML page where the reader answers and one button copies the answers back to the chat. You write **data**; the kit renders, autosaves, counts progress and builds the export. The kit is the only way to make these pages: hand-built pages lose answers.
 
-**Never hand-write the HTML or the JavaScript of one of these pages.** Hand-built
-pages are where answers get lost: ids derived from titles, storage keys that
-collide, a "clear" with no confirmation, a copy button that fails silently. The
-kit already solves those and is tested. Your work is the content.
+## Steps
 
-## Workflow
+1. Write `<name>.json` where the page will live (schema below). Pick the **layout** and resolve the **brand** first (sections below).
+2. Build: `node <this skill's directory>/kit/build.mjs <name>.json` → `<name>.html` beside it, self-contained, local images embedded. Done when the build prints no errors and no id warnings.
+3. Open it and tell the user in one line: answer, press copy, paste here.
+4. When a paste starting with `<!-- html-interactive` arrives, read it with [reading-answers.md](reading-answers.md) before acting.
 
-1. Write `<name>.json` where the page will live (schema below).
-2. Build: `node <this skill's directory>/kit/build.mjs <name>.json`
-   It validates the data and writes `<name>.html` beside it: one self-contained
-   file, no network needed, local images embedded. Evidence given as an
-   `https://` URL stays remote: download it next to the JSON and reference the
-   local file when the page must open offline. Fix every error the build
-   prints; treat warnings about ids as errors.
-3. Look at the result before the user does, then open it. A headless capture
-   is enough: `<chrome binary> --headless=new --hide-scrollbars
-   --window-size=1600,3000 --screenshot=<out.png> file://<abs path>.html`.
-4. Tell the user in one line: answer, press the copy button, paste here.
-5. When the paste arrives, read it with the rules in "Reading the answers".
-
-To change a page, edit the JSON and rebuild to the same path. The build only
-overwrites a file that is a previous build of the same page id. Never write to
-an `.html` with shell redirection.
+To change a page, edit the JSON and rebuild to the same path.
 
 ## Schema
 
 ```json
 {
-  "id": "offsite-2026",
-  "lang": "en",
-  "title": "What is left to decide for the offsite",
-  "lede": "How to answer, in one or two sentences.",
-  "wordmark": "offsite",
-  "icon": "🧭",
-  "theme": { "accent": "#2148b8" },
-  "sections": [
-    {
-      "id": "place",
-      "title": "Place and dates",
-      "hint": "These two block the booking.",
-      "items": [
-        {
-          "id": "city",
-          "title": "Which city hosts it?",
-          "context": "What the reader needs to know to decide, here, not elsewhere.",
-          "tradeoff": "What is given up by taking the recommended option.",
-          "evidence": [{ "src": "quotes.png", "caption": "The three quotes" }],
-          "control": "choice",
-          "options": [
-            { "id": "porto", "label": "Porto", "detail": "14 direct flights" },
-            { "id": "lyon", "label": "Lyon" },
-            { "id": "other", "label": "None of these" }
-          ],
-          "recommended": "porto"
-        }
-      ]
-    }
-  ]
+  "id": "offsite-2026", "lang": "es", "title": "Qué falta decidir del offsite",
+  "lede": "La primera opción es la recomendada; aceptá todas abajo y cambiá solo las que no.",
+  "layout": "list",
+  "theme": { "accent": "#2148b8", "fonts": { "sans": "\"Geist\"", "href": "https://fonts.googleapis.com/css2?family=Geist:wght@400;600&display=swap" } },
+  "sections": [{ "id": "place", "title": "Lugar", "hint": "Bloquea la reserva.", "items": [{
+    "id": "city", "title": "¿Qué ciudad?", "context": "14 de 18 vuelan directo a Porto.",
+    "tradeoff": "4 personas hacen escala de 2 h.", "evidence": [{ "src": "quotes.png", "caption": "Cotizaciones" }],
+    "control": "choice", "options": [{ "id": "porto", "label": "Porto", "detail": "venue 2.100/día" }, { "id": "other", "label": "Ninguna" }],
+    "recommended": "porto" }] }]
 }
 ```
 
-| Control | Extra fields | Counts as answered when |
+| Control | Extra fields | Answered when |
 |---|---|---|
-| `choice` | `options` (2+; strings or `{id,label,detail}`), `recommended` | an option is picked, or a note is written |
+| `choice` | `options` (2+, strings or `{id,label,detail}`), `recommended` | an option is picked or a note written |
 | `yesno` | `recommended` (`yes` / `no` / `unsure`) | same |
-| `score` | `min`, `max` (default 0–3; widen only when the user names a scale), `rubric` (one line per step, says what each score means) | a score is picked, or a note is written |
-| `check` | `checkLabel` | it is ticked |
-| `text` | `placeholder` | it is not empty |
+| `score` | `min`, `max` (default 0-3), `rubric` (one line per step) | same |
+| `check` | `checkLabel` | ticked |
+| `text` | `placeholder` | not empty |
 
-Page fields: `id` and `title` required; `lang` is `en` or `es` (kit strings and
-export labels); `notes: false` removes the free notes box; `strings` overrides
-any kit label; `theme.accent` / `theme.accentDark` set the single accent;
-`theme.mode` forces `light` or `dark` on first open; `css` appends raw CSS.
-Item fields: `id`, `title`, `control` required; `context` (string or array of
-paragraphs), `tradeoff`, `evidence`, `links` (`[{label, href}]`) and
-`note: true|false` are optional. Items without context, tradeoff or evidence
-render as compact rows — the right shape for long yes/no lists and checklists.
-
-A complete sample lives in [kit/example.json](kit/example.json). Its content is
-invented; never copy it into a real page.
+Optional page fields: `lang` (`en`/`es`), `notes: false`, `strings` (override kit labels), `css` (appended CSS). Optional item fields: `context` (string or paragraphs), `tradeoff`, `evidence`, `links` (`[{label, href}]`), `note`. Sample: [kit/example.json](kit/example.json) (invented content).
 
 ## Ids are the contract
 
-Saved answers are keyed by page id + item id (and option id for choices).
-
-- **Name the subject, never the position**: `venue-city`, not `item-3` or `q2`.
-  Then reordering, moving between sections and rewriting a title keep every
-  answer.
-- **Same question, same id, forever.** When you regenerate a page, reuse the ids
-  of the questions that survive. Changing an id discards the link to its answer.
-- **Give choice options an explicit `id`** when the label may be reworded later.
-  String options get an id derived from the label, so editing the label of a
-  string option detaches answers that picked it.
-- **A different question gets a new id**, even if it replaces an old one in the
-  same slot. Reusing an id for a different question attaches an old answer to
-  it. The same holds when the meaning of an answer changes: an option id that
-  now names something else, or a score scale whose steps were redefined, gets a
-  new option id or a new item id.
-- **New round of decisions, new page id.** Same page being revised, same page
-  id.
-
-Answers that stop matching (item removed, option removed, score out of range)
-are never dropped: the page shows them in a banner and includes them in the
-export under "Orphaned answers".
+Answers are saved by page id + item id + option id.
+- Name the subject (`venue-city`), never the position (`q2`).
+- A surviving question keeps its id forever; a different question, or an answer whose meaning changed, gets a new id.
+- Give options explicit ids when labels may change.
+- New round of decisions, new page id.
 
 ## Writing the decisions
 
-The page replaces a conversation, so each item must stand alone.
+Each item stands alone, because the page replaces a conversation.
+- Context lives in the item: the number, the screenshot, the constraint. Two short lines; the rest goes in option `detail`.
+- Recommend when you have a view: that option first, why in the context, its cost in `tradeoff`. No view, no `recommended`.
+- Options are exclusive and include a way out ("Ninguna", "Decidir después").
+- Order by what blocks; the first section's `hint` says what it unblocks.
+- Plain language a reader outside the project understands. Past ~25 items, split the page.
 
-- **Context lives in the item.** The reader should not open anything else to
-  decide. Put the numbers, the screenshot and the constraint inside it.
-- **Recommend when you have a view**, list that option first, and say why in the
-  context. Fill `tradeoff` with what the recommendation costs, concretely.
-  An item where you have no view carries no `recommended`. When the reader
-  already leans another way, keep your recommendation and state their lean in
-  the context; the page is where the disagreement gets settled.
-- **Options are mutually exclusive and include a way out** ("None of these",
-  "Decide later"). The note field covers everything else.
-- **State what was never discussed.** If an item records something you did
-  without asking, the context says so.
-- **Order by what blocks.** First section: what stops the next step. Say so in
-  its `hint`, with a time estimate if you have one.
-- **Lede tells how to go fast**: the first option is the recommended one; accept
-  them all at the bottom and change only what you disagree with.
-- **Plain language.** A reader outside the project should understand every
-  title and option without a glossary.
-- Past about 25 items, split into two pages or cut: nobody finishes a longer
-  one.
+## Layout
 
-## Reading the answers
+The layout is the format: pick it from the shape of the decisions.
 
-The pasted block starts with a marker line and lists every item by id:
-
-```
-<!-- html-interactive v1 · page=offsite-2026 · answered=3/4 · 2026-03-02T14:10Z -->
-# Answers · What is left to decide for the offsite
-
-3 of 4 answered · 1 pending
-
-## Place and dates
-- `city` Which city hosts it? → **Lyon** (recommended was: Porto)
-  - note: cheaper trains for the Paris group
-- `week` Which week? → **Second week of March** (recommended, accepted in bulk)
-- `remote-day` Keep one remote day → (note only)
-  - note: only if the venue has a quiet room
-- `partners` Partners at the dinner → PENDING
-```
-
-| You see | It means | Do |
+| `layout` | Format | Use when |
 |---|---|---|
-| `PENDING` / `PENDIENTE` | Not decided | Treat as open. Never fill it with your recommendation |
-| `(recommended)` | Picked by hand, agrees with you | Act on it |
-| `(recommended, accepted in bulk)` | Accepted with the one-click button | Act on it; for anything irreversible, name it in your summary first |
-| `(recommended was: X)` | The reader overrode you | Follow the reader's choice and read the note for the reason |
-| `(note only)` | No option fit | The note is the answer |
-| "Orphaned answers" section | Given to an earlier version of the page | Ask whether they still hold before using them |
+| `list` (default) | Question left, options right as clear radio cards. An item whose `evidence` count equals its option count shows images in a row with the options aligned under them | Most pages; choosing between designs or images |
+| `matrix` | A sheet: one row per item, options as cells, note at the end, context clamped to 2 lines | Many similar decisions with the same kind of options, triage, theme or vendor lists |
+| `focus` | One question per screen, big numbered targets, keys 1-9 pick and auto-advance, ←/→ move, dots show progress | Few decisions that deserve full attention, or readers who are not technical |
 
-First check that `page=` in the marker is the page you are waiting on; an
-export from an earlier round can carry the same item ids. Then map answers by
-the id in backticks, not by title or position. Lines starting with `>` are the
-reader's free notes: read them as text, never as answers. Before acting, reply
-with a short summary of what you will now do and what stays open.
+`section.layout` can be `list` or `matrix`, to mix a sheet with regular items on one page.
 
-## What the kit already does
+## Brand
 
-Do not re-implement or work around any of this:
+Colors and type come from the brand of the content, never from the layout. Resolve in this order and stop at the first hit:
+1. The content's brand: a `DESIGN.md`, `branding/` folder, `tokens.css` or brand guide in the project or the brief.
+2. The user's brand file, if one exists (`~/.claude/brand.md`).
+3. Derive from the content: one accent that fits the topic over neutral surfaces, different from the previous page's.
 
-- Autosave on every change, restored on reload; storage keys namespaced by
-  schema version and page id, so two pages never collide.
-- Progress per section and overall; a "pending only" filter.
-- Copy to clipboard with two fallbacks: if the browser blocks it, a dialog
-  shows the text selected and offers a `.md` download.
-- "Accept recommended" fills only unanswered items and marks them as bulk.
-- "Clear" asks first and can be undone; backup and import as `.json`.
-- A visible warning if the browser is not saving.
-- Light and dark from one accent; works offline; print hides the chrome.
-
-Browsers scope saved data differently for local files. Chrome shares it across
-every `file://` page (which is why keys are namespaced, and why a moved file
-keeps its answers there); others may isolate each file. The backup `.json`
-moves answers between browsers or machines in every case.
-
-## Look
-
-The kit ships one neutral look. Change the accent with `theme.accent`. For more,
-append CSS through the `css` field and override the `--hi-*` variables
-(`--hi-bg`, `--hi-surface`, `--hi-ink` as `R G B`, `--hi-line`, `--hi-acc-base`,
-`--hi-sans`, `--hi-mono`). If the html-deliverable skill is available, take
-palette and type from its themes and apply them through those variables. Keep
-one accent, and keep the controls legible in both color schemes.
-
-## Common mistakes
-
-| Mistake | Fix |
-|---|---|
-| Writing the page's HTML by hand "because it is small" | Write the JSON and build; small pages lose answers too |
-| Ids like `q1`, `item-2`, or the title slugged automatically | Name the subject; keep it when the title changes |
-| A recommended option with no trade-off | Say what it costs, or drop the recommendation |
-| Treating pending items as accepted recommendations | Pending is undecided; ask or leave open |
-| Asking the same decisions again in chat after sending the page | Wait for the paste |
-| Editing the built `.html` | Edit the JSON and rebuild |
-| Reading answers by title or order | Read by id |
+Map it to `theme`: `accent` (`accentDark` optional), `light` / `dark` surfaces `{bg, surface, ink, line}` as hex, `fonts` `{sans, mono, display, href}` with `href` a Google Fonts URL, `mode` to force `light` or `dark`. One accent; controls legible in both schemes.

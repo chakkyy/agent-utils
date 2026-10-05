@@ -123,3 +123,7 @@ and the build.
 ## License
 
 [MIT](../../LICENSE)
+
+## Layouts and brand
+
+Three formats, picked by the shape of the decisions: `list` (the default; an item with one image per option lays them out side by side), `matrix` (a sheet, one row per decision) and `focus` (one question per screen, keys 1-9, auto-advance). Colors and type are not the layout: they come from the content's brand (`DESIGN.md`, `branding/`, `tokens.css`), then from a brand file the user keeps, then from one accent derived from the topic.

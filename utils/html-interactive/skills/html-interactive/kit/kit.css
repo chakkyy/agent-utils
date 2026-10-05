@@ -275,3 +275,69 @@ noscript p { max-width: 60ch; margin: 64px auto; padding: 0 24px; }
   .hi-shell, .hi-dock, .hi-toast { display: none; }
   body { padding-bottom: 0; }
 }
+
+/* 1.1 · clearer actions in the base list */
+.hi-opt-body { position: relative; padding: 11px 14px 11px 40px; border: 1.5px solid rgb(var(--hi-ink) / .14); color: rgb(var(--hi-ink) / .85); }
+.hi-opt-body::before { content: ""; position: absolute; left: 14px; top: 13px; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid rgb(var(--hi-ink) / .35); background: var(--hi-surface); transition: border-color .12s ease, box-shadow .12s ease; }
+.hi-opt:hover .hi-opt-body { border-color: color-mix(in srgb, var(--hi-acc) 55%, transparent); }
+.hi-opt input:checked + .hi-opt-body { border-color: var(--hi-acc); background: color-mix(in srgb, var(--hi-acc) 9%, var(--hi-surface)); box-shadow: none; color: rgb(var(--hi-ink)); }
+.hi-opt input:checked + .hi-opt-body::before { border-color: var(--hi-acc); box-shadow: inset 0 0 0 3px var(--hi-surface); background: var(--hi-acc); }
+.hi-seg .hi-opt-body { padding: 8px 14px; }
+.hi-seg .hi-opt-body::before { display: none; }
+
+/* compare: an item whose evidence matches its options one to one */
+.hi-item.is-compare { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.hi-item.is-compare .hi-a { position: static; }
+.hi-item.is-compare .hi-ev { max-width: none; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+.hi-item.is-compare .hi-ev img { aspect-ratio: 4 / 3; max-height: none; }
+.hi-item.is-compare .hi-opts { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+
+/* matrix: a sheet, one row per item */
+.hi-l-matrix .hi-items { margin-top: 16px; border: 1px solid var(--hi-line); border-radius: 12px; overflow: hidden; background: var(--hi-surface); }
+.hi-l-matrix .hi-item, .hi-l-matrix .hi-item.is-compact { grid-template-columns: minmax(200px, 1fr) minmax(0, 2.2fr) minmax(150px, .8fr); gap: 16px; padding: 12px 16px; align-items: center; }
+.hi-l-matrix .hi-item:nth-child(even) { background: rgb(var(--hi-ink) / .025); }
+.hi-l-matrix .hi-item:last-child { border-bottom: 0; }
+.hi-l-matrix .hi-q { display: block; }
+.hi-l-matrix .hi-k, .hi-l-matrix .hi-ev, .hi-l-matrix .hi-links, .hi-l-matrix .hi-q .hi-tradeoff, .hi-l-matrix .hi-opt-detail { display: none; }
+.hi-l-matrix h3 { font-size: 1rem; font-weight: 600; }
+.hi-l-matrix .hi-q p { margin-top: 2px; font-size: .82rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.hi-l-matrix .hi-a { display: contents; }
+.hi-l-matrix .hi-opts { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 6px; }
+.hi-l-matrix .hi-opt-body { height: 100%; min-height: 40px; align-items: center; padding: 6px 10px 6px 30px; font-size: .85rem; }
+.hi-l-matrix .hi-opt-body::before { left: 10px; top: 50%; margin-top: -6px; width: 12px; height: 12px; }
+.hi-l-matrix .hi-note { min-height: 0; height: 40px; font-size: .85rem; }
+
+/* focus: one question per screen, big targets, keys 1-9 */
+.hi-focus .hi-statline { display: none; }
+.hi-focus .hi-item { display: none; }
+.hi-focus .hi-section:not(#hi-notes):not(:has(.is-current)) { display: none; }
+.hi-focus .hi-section { padding-top: 24px; }
+.hi-focus .hi-sh { border: 0; justify-content: center; }
+.hi-focus .hi-sh .hi-count, .hi-focus .hi-sh .hi-hint { display: none; }
+.hi-focus .hi-sh h2 { font-size: .8rem; font-weight: 500; letter-spacing: .06em; color: rgb(var(--hi-ink) / .5); }
+.hi-focus .hi-item.is-current { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; max-width: 780px; margin: 0 auto; padding: 4vh 0 2vh; border: 0; }
+.hi-focus .is-current .hi-k { display: none; }
+.hi-focus .is-current h3 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); line-height: 1.08; letter-spacing: -.03em; }
+.hi-focus .is-current .hi-q p { font-size: 1.05rem; }
+.hi-focus .is-current .hi-a { position: static; gap: 12px; }
+.hi-focus .is-current .hi-opts { counter-reset: opt; gap: 10px; }
+.hi-focus .is-current .hi-opt { counter-increment: opt; }
+.hi-focus .is-current .hi-opt-body { min-height: 64px; align-items: center; padding: 14px 18px 14px 60px; font-size: 1.1rem; border-radius: 14px; }
+.hi-focus .is-current .hi-opt-body::before { content: counter(opt); display: grid; place-items: center; left: 16px; top: 50%; margin-top: -14px; width: 28px; height: 28px; border-radius: 8px; font: 600 .85rem var(--hi-mono); color: rgb(var(--hi-ink) / .6); }
+.hi-focus .is-current .hi-opt input:checked + .hi-opt-body::before { box-shadow: none; color: var(--hi-acc-ink); }
+.hi-focus .is-current .hi-seg { counter-reset: opt; }
+.hi-dots { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; padding: 8px 0 0; }
+.hi-dot { width: 10px; height: 10px; padding: 0; border-radius: 50%; border: 1.5px solid rgb(var(--hi-ink) / .3); background: none; cursor: pointer; transition: transform .12s ease-out, background-color .12s ease; }
+.hi-dot.is-done { background: var(--hi-acc); border-color: var(--hi-acc); }
+.hi-dot.is-on { transform: scale(1.4); border-color: rgb(var(--hi-ink)); }
+.hi-stepnav { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 24px 0 8px; }
+.hi-step-n { font-size: .9rem; color: rgb(var(--hi-ink) / .6); min-width: 64px; text-align: center; }
+.hi-stepnav .hi-btn:disabled { opacity: .4; cursor: default; }
+@media (max-width: 900px) { .hi-l-matrix .hi-item, .hi-l-matrix .hi-item.is-compact { grid-template-columns: 1fr; } }
+/* focus: a fixed stage so moving between questions never shifts the page */
+.hi-focus .hi-hero { padding: 32px 0 0; }
+.hi-focus .hi-hero .hi-lede { display: none; }
+.hi-focus .hi-section:has(.is-current) { min-height: max(420px, calc(100vh - var(--hi-shell-h) - var(--hi-dock-h) - 230px)); display: grid; grid-template-rows: auto 1fr; padding-top: 16px; }
+.hi-focus .hi-section:has(.is-current) .hi-items { display: grid; align-content: center; }
+.hi-focus .hi-item.is-current { padding: 0; width: 100%; }
+.hi-focus .hi-stepnav { position: sticky; bottom: calc(var(--hi-dock-h) + 8px); }
