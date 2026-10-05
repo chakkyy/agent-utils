@@ -1,6 +1,6 @@
 {
   "name": "html-deliverable",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Turns 'make me an HTML page' into a polished single-file local page — invariant structure, eight themes, evidence-first content.",
   "license": "MIT",
   "author": {
