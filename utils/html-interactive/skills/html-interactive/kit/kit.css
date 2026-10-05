@@ -341,3 +341,32 @@ noscript p { max-width: 60ch; margin: 64px auto; padding: 0 24px; }
 .hi-focus .hi-section:has(.is-current) .hi-items { display: grid; align-content: safe center; overflow-y: auto; overscroll-behavior: contain; }
 .hi-focus .hi-item.is-current { padding: 0; width: 100%; }
 .hi-focus .hi-stepnav { position: sticky; bottom: calc(var(--hi-dock-h) + 8px); }
+/* focus 1.1.2: compact so four or five options fit without scrolling */
+.hi-focus .hi-hero { padding: 14px 0 0; display: flex; align-items: center; gap: 16px; }
+.hi-focus .hi-hero h1 { font-size: 1rem; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; color: rgb(var(--hi-ink) / .6); }
+.hi-focus .hi-dots { padding: 4px 0 0; }
+.hi-focus .hi-section:has(.is-current) { height: max(380px, calc(100vh - var(--hi-shell-h) - var(--hi-dock-h) - 150px)); padding-top: 8px; }
+.hi-focus .hi-item.is-current { gap: 18px; }
+.hi-focus .is-current h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); }
+.hi-focus .is-current .hi-q p { font-size: .98rem; margin-top: 6px; }
+.hi-focus .is-current .hi-opts { gap: 8px; }
+.hi-focus .is-current .hi-opt-body { min-height: 50px; padding: 10px 16px 10px 54px; font-size: 1rem; border-radius: 12px; align-items: baseline; }
+.hi-focus .is-current .hi-opt-body::before { width: 26px; height: 26px; margin-top: -13px; left: 14px; }
+.hi-focus .is-current .hi-opt-detail { flex-basis: auto; font-size: .88rem; }
+.hi-focus .hi-stepnav { padding: 14px 0 6px; }
+
+/* focus 1.1.2: when a question does not fit, split it into two columns so the options never scroll out of view */
+.hi-focus .hi-item.is-current.is-tall { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; max-width: 1180px; }
+.hi-focus .is-tall .hi-q { position: sticky; top: 0; }
+.hi-focus .is-tall .hi-q > p { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.hi-focus .is-tall.is-open .hi-q > p { display: block; -webkit-line-clamp: unset; }
+.hi-focus .is-tall .hi-ev { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); max-width: 420px; margin-top: 12px; }
+.hi-focus .is-current .hi-ev img { max-height: 120px; }
+.hi-more { margin-top: 8px; padding: 0; border: 0; background: none; color: var(--hi-acc); font: inherit; font-size: .9rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 900px) { .hi-focus .hi-item.is-current.is-tall { grid-template-columns: minmax(0, 1fr); } }
+/* focus: the free notes box lines up with the question column */
+.hi-focus #hi-notes { max-width: 780px; margin: 0 auto; }
+.hi-focus #hi-notes .hi-sh { justify-content: flex-start; border: 0; padding-bottom: 8px; }
+.hi-focus #hi-notes .hi-sh h2 { font-size: 1rem; letter-spacing: 0; color: rgb(var(--hi-ink) / .7); }
+.hi-focus #hi-notes .hi-sh .hi-hint { display: inline; font-size: .88rem; }
+.hi-focus #hi-notes .hi-text { margin-top: 8px; max-width: none; }

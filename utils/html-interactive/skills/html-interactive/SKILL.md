@@ -68,7 +68,7 @@ The layout is the format: pick it from the shape of the decisions.
 |---|---|---|
 | `list` (default) | Question left, options right as clear radio cards. An item whose `evidence` count equals its option count shows images in a row with the options aligned under them | Most pages; choosing between designs or images |
 | `matrix` | A sheet: one row per item, options as cells, note at the end, context clamped to 2 lines | Many similar decisions with the same kind of options, triage, theme or vendor lists |
-| `focus` | One question per screen, big numbered targets, keys 1-9 pick and auto-advance, ←/→ move, dots show progress | Few decisions that deserve full attention, or readers who are not technical |
+| `focus` | One question per screen, big numbered targets, keys 1-9 pick and auto-advance, ←/→ move, dots show progress | Few decisions that deserve full attention, or readers who are not technical. Up to 7 options and a short context; a question that does not fit splits into two columns (question left, options right) with the context clamped to 4 lines |
 
 `section.layout` can be `list` or `matrix`, to mix a sheet with regular items on one page.
 
