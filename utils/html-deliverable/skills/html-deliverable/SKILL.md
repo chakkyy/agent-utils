@@ -32,7 +32,7 @@ Colors and type come from the brand of the content. Stop at the first hit:
 | `base` | Kickoffs, plans, working docs, pitches. The default |
 | `editorial` | Long reads, narrative proposals; muted and calm |
 | `print` | Personal reports, digests, retros, postmortems; memorable identity |
-| `tablero` | Dashboards, status, metrics, live technical evidence. Dark |
+| `tablero` | Dashboards, status, metrics, live technical evidence |
 | `tecnico` | Dev guides, QA, setup docs, technical reviews |
 | `changelog` | Proposing or announcing a change to a tool, rule or process |
 | `organic` | Chill pages read often: dailies, trackers, notes to friends |
@@ -43,7 +43,7 @@ Do not repeat the previous page's theme unless the pages are a series. Two dials
 ## Invariant structure
 
 - Header shell: wordmark left, mono metadata and a light/dark toggle right. Sticky, translucent (blur + saturate), solid under `prefers-reduced-transparency` and `prefers-contrast: more`. Pill nav with anchors at 4+ sections; `scroll-margin-top` on sections; footer mirrors the wordmark.
-- Toggle follows `prefers-color-scheme`, persists in `localStorage`, re-declares the CSS variables under `html[data-theme="dark"]`. Locked themes (tablero, changelog, joy) skip it.
+- Every theme ships light and dark: the toggle follows `prefers-color-scheme`, persists in `localStorage` and re-declares the CSS variables under `html[data-theme="dark"]`.
 - Apple base: display type large and tight (-0.02 to -0.035em, line-height 1.02-1.1), body 15-16px at 1.5-1.65, concentric radii, thin borders over shadows, font stacks ending in `system-ui`.
 - One accent with meaning, always beside a non-color signal; semantic colors stay separate. Content-related favicon.
 - Only the page `h1` is a thesis sentence with one accent phrase; section titles are short labels.
