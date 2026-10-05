@@ -1,0 +1,16 @@
+{
+  "name": "html-interactive",
+  "version": "1.0.0",
+  "description": "Decisions go out as a local HTML page and come back as text: the agent writes data, a tested kit renders the page, saves every answer and builds a paste-ready export.",
+  "license": "MIT",
+  "author": {
+    "name": "Carlos Ramirez",
+    "url": "https://github.com/chakkyy"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "HTML Interactive",
+    "shortDescription": "Pages the reader answers — choices, yes/no, scores, checklists — with the result copied back to the chat.",
+    "category": "utilities"
+  }
+}

@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Small, focused utilities for coding agents. Each util is an independently installable plugin.",
-    "version": "1.4.0"
+    "version": "1.5.0"
   },
   "plugins": [
     {
@@ -31,6 +31,12 @@
       "name": "evidence-first",
       "description": "Blocks the agent from recommending technical work until it has produced a receipt — identifier, link, verbatim quote, causal tie — or reports NO EVIDENCE and stops.",
       "source": "./utils/evidence-first",
+      "strict": false
+    },
+    {
+      "name": "html-interactive",
+      "description": "Decisions go out as a local HTML page and come back as text — the agent writes data, a tested kit renders the page, saves every answer and builds a paste-ready export.",
+      "source": "./utils/html-interactive",
       "strict": false
     }
   ]

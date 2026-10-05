@@ -36,6 +36,7 @@ troubleshooting.
 | [html-deliverable](utils/html-deliverable/) | "Make me an HTML page" producing gradient-and-glass slop with invented numbers. A skill with a proven recipe: invariant structure, four themes, one accent color, real data only. |
 | [evidence-first](utils/evidence-first/) | Confident proposals for problems nobody has. The agent must produce a receipt — identifier, resolving link, verbatim quote, causal tie — before recommending any guard, CI check, migration or refactor, or emit `NO EVIDENCE` and stop. |
 | [live-qa](utils/live-qa/) | "Does it work on staging?" answered from code reading and green unit suites. A skill that forces a real logged-in browser session: one verdict per case with screenshot/payload evidence, plus a Playwright kit with bot masking, SW blocking and analytics capture pre-solved. |
+| [html-interactive](utils/html-interactive/) | Ten open decisions asked one question at a time, or guessed. The agent writes them as data and a tested kit renders one local page: context, recommended option and trade-off per decision, answers saved on every click, and a copy button that returns them to the chat by id. |
 
 Each util's README covers its options, the manual (no-plugin) install, and how
 it works.
