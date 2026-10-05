@@ -1,7 +1,7 @@
 {
   "name": "html-interactive",
   "description": "Decisions go out as a local HTML page and come back as text: the agent writes data, a tested kit renders the page, saves every answer and builds a paste-ready export.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "MIT",
   "author": {
     "name": "Carlos Ramirez",

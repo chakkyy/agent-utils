@@ -19,7 +19,7 @@ const MIME = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
 const EMBED_WARN_BYTES = 8 * 1024 * 1024;
 const rgb = (hex) => {
   const h = hex.replace('#', '');
-  const f = h.length === 3 ? h.split('').map((c) => c + c).join('') : h.slice(0, 6);
+  const f = h.length <= 4 ? h.slice(0, 3).split('').map((c) => c + c).join('') : h.slice(0, 6);
   return [0, 2, 4].map((k) => parseInt(f.slice(k, k + 2), 16)).join(' ');
 };
 
@@ -29,7 +29,8 @@ const die = (msg) => {
 };
 const escHtml = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const safeJson = (v) => JSON.stringify(v).replace(/</g, '\\u003c').replace(/[\u2028\u2029]/g, (c) => '\\u' + c.charCodeAt(0).toString(16));
-const isColor = (s) => typeof s === 'string' && /^#[0-9a-fA-F]{3,8}$/.test(s);
+const isColor = (s) => typeof s === 'string' && /^#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(s);
+const isFont = (s) => typeof s === 'string' && /^[\w\s"',.-]{1,120}$/.test(s);
 const surfaceVars = (pal) => (pal && typeof pal === 'object'
   ? ['bg', 'surface', 'line'].filter((k) => isColor(pal[k])).map((k) => `--hi-${k}:${pal[k]}`).concat(isColor(pal.ink) ? [`--hi-ink:${rgb(pal.ink)}`] : [])
   : []);
@@ -95,8 +96,8 @@ if (existsSync(out) && !force && !readFileSync(out, 'utf8').includes(marker)) {
 const theme = page.theme && typeof page.theme === 'object' ? page.theme : {};
 const fonts = theme.fonts && typeof theme.fonts === 'object' ? theme.fonts : {};
 const vars = [...surfaceVars(theme.light)];
-if (typeof fonts.sans === 'string') vars.push(`--hi-sans:${fonts.sans},system-ui,sans-serif`);
-if (typeof fonts.mono === 'string') vars.push(`--hi-mono:${fonts.mono},ui-monospace,monospace`);
+if (isFont(fonts.sans)) vars.push(`--hi-sans:${fonts.sans},system-ui,sans-serif`);
+if (isFont(fonts.mono)) vars.push(`--hi-mono:${fonts.mono},ui-monospace,monospace`);
 if (isColor(theme.accent)) vars.push(`--hi-acc-base:${theme.accent}`);
 if (isColor(theme.accentInk)) vars.push(`--hi-acc-ink:${theme.accentInk}`);
 if (isColor(theme.accentDark)) vars.push(`--hi-acc-dark:${theme.accentDark}`);
@@ -104,8 +105,9 @@ if (isColor(theme.accentInkDark)) vars.push(`--hi-acc-ink-dark:${theme.accentInk
 const css = readFileSync(join(here, 'kit.css'), 'utf8')
   + (vars.length ? `\n:root{${vars.join(';')}}` : '')
   + (surfaceVars(theme.dark).length ? `\nhtml[data-theme="dark"]{${surfaceVars(theme.dark).join(';')}}` : '')
-  + (typeof fonts.display === 'string' ? `\n.hi-hero h1,.hi-sh h2,.hi-q h3{font-family:${fonts.display},Georgia,serif}` : '')
-  + (typeof page.css === 'string' ? `\n${page.css.replace(/<\/style/gi, '<\\/style')}` : '');
+  + (isFont(fonts.display) ? `\n.hi-hero h1,.hi-sh h2,.hi-q h3{font-family:${fonts.display},Georgia,serif}` : '')
+  + (typeof page.css === 'string' ? `\n${page.css}` : '');
+const safeCss = css.replace(/<\/style/gi, '<\\/style');
 const runtime = readFileSync(join(here, 'runtime.js'), 'utf8');
 if (/<\/script/i.test(runtime)) die('runtime.js contains a closing script tag; refusing to inline it');
 const icon = typeof page.icon === 'string' && page.icon ? page.icon : '☑️';
@@ -121,7 +123,7 @@ ${marker}
 <title>${escHtml(page.title)}</title>
 ${typeof fonts.href === 'string' && /^https:\/\/fonts\.googleapis\.com\//.test(fonts.href) ? `<link rel="stylesheet" href="${escHtml(fonts.href)}">\n` : ''}<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${escHtml(icon)}</text></svg>">
 <style>
-${css}
+${safeCss}
 </style>
 </head>
 <body>

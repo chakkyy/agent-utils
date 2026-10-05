@@ -337,7 +337,7 @@ noscript p { max-width: 60ch; margin: 64px auto; padding: 0 24px; }
 /* focus: a fixed stage so moving between questions never shifts the page */
 .hi-focus .hi-hero { padding: 32px 0 0; }
 .hi-focus .hi-hero .hi-lede { display: none; }
-.hi-focus .hi-section:has(.is-current) { min-height: max(420px, calc(100vh - var(--hi-shell-h) - var(--hi-dock-h) - 230px)); display: grid; grid-template-rows: auto 1fr; padding-top: 16px; }
-.hi-focus .hi-section:has(.is-current) .hi-items { display: grid; align-content: center; }
+.hi-focus .hi-section:has(.is-current) { height: max(420px, calc(100vh - var(--hi-shell-h) - var(--hi-dock-h) - 230px)); display: grid; grid-template-rows: auto minmax(0, 1fr); padding-top: 16px; }
+.hi-focus .hi-section:has(.is-current) .hi-items { display: grid; align-content: safe center; overflow-y: auto; overscroll-behavior: contain; }
 .hi-focus .hi-item.is-current { padding: 0; width: 100%; }
 .hi-focus .hi-stepnav { position: sticky; bottom: calc(var(--hi-dock-h) + 8px); }
