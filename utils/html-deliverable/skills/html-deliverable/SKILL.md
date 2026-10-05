@@ -11,6 +11,10 @@ One local HTML file, everything in a single file, opened in the browser when don
 and the result looks far better. Only reach for a hosted/shareable artifact if
 the user needs a URL and asks for one.
 
+**Reader has to act, not just read?** If the page asks the reader to decide,
+choose, score, tick or annotate and the result must come back to the chat, use
+the `html-interactive` skill instead: it owns state, progress and export.
+
 ## Where to save it
 
 Wherever the user says; if they don't, in the project's workspace root with a

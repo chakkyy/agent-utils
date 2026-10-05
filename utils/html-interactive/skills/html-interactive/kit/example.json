@@ -1,0 +1,86 @@
+{
+  "id": "team-offsite-example",
+  "lang": "en",
+  "title": "What is left to decide for the team offsite",
+  "wordmark": "offsite",
+  "icon": "🧭",
+  "lede": "Sample data, invented for the kit. The first option is the recommended one. To go fast, accept the recommendations at the bottom and change only the ones you disagree with.",
+  "theme": { "accent": "#2148b8" },
+  "sections": [
+    {
+      "id": "place",
+      "title": "Place and dates",
+      "hint": "These two block the booking.",
+      "items": [
+        {
+          "id": "city",
+          "title": "Which city hosts it?",
+          "context": "Three cities fit the budget. Porto has direct flights for 14 of the 18 people and the cheapest venue quote.",
+          "tradeoff": "Four people need a connection of about two hours.",
+          "control": "choice",
+          "options": [
+            { "id": "porto", "label": "Porto", "detail": "14 direct flights, venue at 2,100 per day" },
+            { "id": "lyon", "label": "Lyon", "detail": "11 direct flights, venue at 2,600 per day" },
+            { "id": "valencia", "label": "Valencia", "detail": "9 direct flights, venue at 1,900 per day" },
+            { "id": "other", "label": "None of these, look again" }
+          ],
+          "recommended": "porto"
+        },
+        {
+          "id": "week",
+          "title": "Which week?",
+          "context": "The second week of March avoids the quarter close and two public holidays.",
+          "tradeoff": "It overlaps with one product launch; that team would join for three days instead of five.",
+          "control": "choice",
+          "options": ["Second week of March", "Last week of March", "First week of April"],
+          "recommended": "Second week of March"
+        }
+      ]
+    },
+    {
+      "id": "format",
+      "title": "Format",
+      "hint": "A yes, a no, or not sure yet.",
+      "items": [
+        { "id": "remote-day", "title": "Keep one day with no sessions, for remote work", "control": "yesno", "recommended": "yes" },
+        { "id": "partners", "title": "Partners are invited to the closing dinner", "control": "yesno" },
+        { "id": "external-speaker", "title": "Bring one external speaker", "control": "yesno" }
+      ]
+    },
+    {
+      "id": "sessions",
+      "title": "Session proposals",
+      "hint": "Score each one; the top three get a slot.",
+      "items": [
+        {
+          "id": "session-roadmap",
+          "title": "Roadmap review with the whole team",
+          "context": "Ninety minutes, led by product. Walks through the next two quarters and collects objections live.",
+          "control": "score",
+          "min": 0,
+          "max": 3,
+          "rubric": ["Skip it", "Only if there is a free slot", "Worth a slot", "Must happen"]
+        },
+        {
+          "id": "session-incident",
+          "title": "Incident replay: the outage from last autumn",
+          "context": "Sixty minutes. The on-call engineers replay the timeline and the room proposes what to change.",
+          "control": "score",
+          "min": 0,
+          "max": 3,
+          "rubric": ["Skip it", "Only if there is a free slot", "Worth a slot", "Must happen"]
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "Logistics",
+      "hint": "Tick what is already done.",
+      "items": [
+        { "id": "budget-approved", "title": "Budget approved by finance", "control": "check" },
+        { "id": "dietary-survey", "title": "Dietary survey sent to everyone", "control": "check" },
+        { "id": "week-theme", "title": "One line that names the theme of the week", "control": "text", "placeholder": "For example: fewer handoffs" }
+      ]
+    }
+  ]
+}
