@@ -23,15 +23,20 @@ when opened — fonts and icons come from CDNs.)
 - **Invariant structure**: wordmark shell header/footer, pill navigation,
   sections with anchors, evidence as tables (caption below, right-aligned
   mono numerics), big stats in statlines, prose capped at a readable measure.
-- **Four themes** — the structure never changes, the look does:
+- **Eight themes** — the structure never changes, the format does; every theme ships light and dark:
 
   | Theme | When |
   | --- | --- |
-  | `geist` (default) | Kickoffs, plans, working docs |
-  | `terminal` | Technical evidence, QA, audits, debugging |
-  | `editorial` | Long-read docs, narrative proposals |
-  | `bold` | Pitches, demos, anything that must land hard |
+  | `base` (default) | Kickoffs, plans, working docs, pitches |
+  | `editorial` | Long reads, narrative proposals |
+  | `print` | Personal reports, digests, retros, postmortems |
+  | `tablero` | Dashboards, status, metrics |
+  | `tecnico` | Dev guides, QA, setup docs |
+  | `changelog` | Proposing or announcing a change to a tool or process |
+  | `organic` | Chill pages read often: dailies, trackers |
+  | `joy` | Trips, events, celebrations |
 
+- **Brand layer**: colors and type come from the project's own brand (`DESIGN.md`, `branding/`, `tokens.css`) when it has one.
 - **One accent color** (your project's brand color), semantic colors kept
   separate, and a ban list: no decorative gradients, no glass effects, no
   ALL-CAPS eyebrows, no arbitrary icons.

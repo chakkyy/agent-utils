@@ -7,7 +7,7 @@
   }
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   const SCHEMA = 1;
-  const KIT_VERSION = '1.1.0';
+  const KIT_VERSION = '1.1.1';
   const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
   const POSITIONAL_RE = /^(item|q|question|d|decision|opt|option|row|n)?-?\d+$/;
   const CONTROLS = ['choice', 'yesno', 'check', 'score', 'text'];
@@ -946,11 +946,15 @@
       const n = el('span', { class: 'hi-step-n hi-num' });
       const prev = el('button', { type: 'button', class: 'hi-btn', text: es ? '← Anterior' : '← Previous' });
       const next = el('button', { type: 'button', class: 'hi-btn is-primary', text: es ? 'Siguiente →' : 'Next →' });
+      let timer = null;
+      const paintDots = () => order.forEach((id, k) => {
+        dots.children[k].className = 'hi-dot' + (k === i ? ' is-on' : '') + (node(k).dataset.state === 'done' ? ' is-done' : '');
+      });
+      new MutationObserver(paintDots).observe(main, { subtree: true, attributes: true, attributeFilter: ['data-state'] });
       const show = () => {
-        order.forEach((id, k) => {
-          node(k).classList.toggle('is-current', k === i);
-          dots.children[k].className = 'hi-dot' + (k === i ? ' is-on' : '') + (node(k).dataset.state === 'done' ? ' is-done' : '');
-        });
+        clearTimeout(timer);
+        order.forEach((id, k) => node(k).classList.toggle('is-current', k === i));
+        paintDots();
         n.textContent = `${i + 1} / ${order.length}`;
         prev.disabled = i === 0;
         next.disabled = i === order.length - 1;
@@ -961,13 +965,16 @@
       prev.addEventListener('click', () => go(-1));
       next.addEventListener('click', () => go(1));
       main.addEventListener('change', (e) => {
-        if (e.target.type === 'radio' && node(i).contains(e.target)) setTimeout(() => { show(); go(1); }, 320);
+        if (e.target.type !== 'radio' || !node(i).contains(e.target)) return;
+        const from = i;
+        clearTimeout(timer);
+        timer = setTimeout(() => { if (i === from) go(1); }, 320);
       });
       doc.addEventListener('keydown', (e) => {
-        if (e.target.closest && e.target.closest('textarea, input[type="text"], dialog')) return;
-        if (/^[1-9]$/.test(e.key)) { const opt = node(i).querySelectorAll('.hi-opt input')[Number(e.key) - 1]; if (opt) opt.click(); }
-        else if (e.key === 'ArrowRight' || e.key === 'Enter') go(1);
-        else if (e.key === 'ArrowLeft') go(-1);
+        if (e.metaKey || e.ctrlKey || e.altKey || (e.target.closest && e.target.closest('textarea, input, button, a, select, summary, dialog'))) return;
+        if (/^[1-9]$/.test(e.key)) { const opt = node(i).querySelectorAll('.hi-opt input')[Number(e.key) - 1]; if (opt) { e.preventDefault(); opt.click(); } }
+        else if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); go(1); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
       });
       pills.querySelectorAll('a').forEach((a) => a.addEventListener('click', (e) => {
         const s = page.sections.find((x) => `#${x.id}` === a.getAttribute('href'));
@@ -977,6 +984,7 @@
         show();
       }));
       main.classList.add('hi-focus');
+      pendingToggle.hidden = true;
       main.querySelector('.hi-hero').after(dots);
       main.insertBefore(el('div', { class: 'hi-stepnav' }, prev, n, next), doc.getElementById('hi-notes'));
       show();
