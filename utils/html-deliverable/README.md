@@ -6,7 +6,7 @@ Ask a coding agent for "an HTML to present X" and you get the default:
 gradient hero, glass cards, emoji bullets, five accent colors, invented
 numbers. This plugin ships a skill with a **proven recipe** instead — an
 invariant page structure (shell header, pill nav, evidence tables, statlines),
-four selectable visual themes, and content rules that force real, verified
+eight selectable themes (base, editorial, print, tablero, tecnico, changelog, organic, joy) plus a brand layer that takes colors and type from the project's own brand, and content rules that force real, verified
 data.
 
 The output is a **single-file local HTML page** you open in your browser. A

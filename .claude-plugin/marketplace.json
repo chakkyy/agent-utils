@@ -17,7 +17,7 @@
     },
     {
       "name": "html-deliverable",
-      "description": "Turns 'make me an HTML page' into a polished single-file local page — invariant structure, four themes, evidence-first content.",
+      "description": "Turns 'make me an HTML page' into a polished single-file local page — invariant structure, eight themes, evidence-first content.",
       "source": "./utils/html-deliverable",
       "strict": false
     },
