@@ -14,15 +14,22 @@ reading correct are different, weaker claims — report them as what they are, n
    screenshot taken. If no user/credentials/environment path exists, output the literal blocker —
    **"NO USER TO TEST WITH"** — as the first line and stop; getting the session is the
    human's step, not something to work around with code reading.
-2. **Boot the harness.** Start from `kit-template.mjs` in this folder (Playwright; auth injection,
+2. **Make Playwright importable.** Node resolves `import 'playwright'` from the folder the script
+   lives in and its parents, so the kit run from this skill's folder or a bare scratch folder dies
+   with `ERR_MODULE_NOT_FOUND`. Set up a QA folder outside the app repo, once per run:
+   `mkdir -p <scratch>/qa && cd <scratch>/qa && npm init -y >/dev/null && npm i -D playwright &&
+   npx playwright install chromium`. Copy `kit-template.mjs` there and write each battery as a
+   `.mjs` beside it. The browser download is cached per machine; only the first run is slow. Not
+   knowing how to run Playwright is never a blocker: this step is the how.
+3. **Boot the harness.** Start from `kit-template.mjs` (Playwright; auth injection,
    service-worker blocking, bot masking, API capture already solved — see Traps). Fill in the
    `QA_TARGET` env var and the per-app markers flagged `EDIT PER APP`. Smoke it: authenticated
    landing + one API 200 before any case runs.
-3. **Run the batteries.** Split cases into read-only batteries (navigation, states, layouts,
+4. **Run the batteries.** Split cases into read-only batteries (navigation, states, layouts,
    viewports — safe to fan out across parallel agents) and one **mutating battery** (completions,
    submissions, anything that writes) that runs last and alone: mutations destroy the clean state
    the read-only batteries assume. A battery is done when every assigned case is adjudicated.
-4. **Report.** One line per case: `CASE: PASS / FAIL / NOT_EXECUTABLE / INCONCLUSIVE — evidence`.
+5. **Report.** One line per case: `CASE: PASS / FAIL / NOT_EXECUTABLE / INCONCLUSIVE — evidence`.
    Done when every case in the brief carries a verdict with evidence, and every `pageerror` seen
    anywhere is listed verbatim — including on green runs.
 
