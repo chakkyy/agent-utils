@@ -98,7 +98,7 @@ fi
 # The author's name legitimately appears in the plugin manifests and the repo
 # slug (chakkyy/agent-utils) in install commands, so only skill content, kit
 # and README are scrubbed, and the slug is not part of the pattern.
-LEAKS=$(grep -riEn 'carlos|linear\.app|DEV-[0-9]|/Users/|~/Desktop' \
+LEAKS=$(grep -riEn 'carlos|linear\.app|DEV-[0-9]|/[U]sers/|~/[D]esktop' \
   "$SKILL_DIR" "$PLUGIN_DIR/README.md" "$TESTS_DIR/kit.test.mjs" 2>/dev/null || true)
 if [ -z "$LEAKS" ]; then
   ok "no personal/project data in skill content, kit, tests or README"

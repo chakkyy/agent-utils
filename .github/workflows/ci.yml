@@ -19,3 +19,5 @@ jobs:
         run: utils/html-deliverable/tests/run-tests.sh
       - name: evidence-first test suite
         run: utils/evidence-first/tests/run-tests.sh
+      - name: html-interactive test suite
+        run: utils/html-interactive/tests/run-tests.sh
