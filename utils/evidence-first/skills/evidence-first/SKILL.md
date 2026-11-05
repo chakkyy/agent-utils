@@ -1,6 +1,6 @@
 ---
 name: evidence-first
-description: Find the receipt before proposing the work. Load whenever a request could end in recommending technical work — evaluate, justify, prevent, harden, improve, stabilise, scale, standardise, automate, reduce risk, pay down debt, design guardrails, add a CI check, propose a migration or a preventive refactor, audit a process, or build a roadmap. Triggers on intent in any language, including implicit asks ("is it worth it?", "what would you do?", "what are our gaps?", "let's stop this happening again"). Also load before writing any analysis, audit or deliverable that ends in a recommendation.
+description: Find the receipt before proposing the work. Load whenever a request could end in recommending technical work (evaluate, prevent, harden, automate, audit, migrate, add a check), in any language and even when implicit ("is it worth it?", "let's stop this happening again"), and before any analysis or deliverable that ends in a recommendation.
 ---
 
 # Evidence-first
@@ -13,8 +13,20 @@ maintenance of a thing that never caught anything.
 
 ## The rule
 
-Write the receipts before you write the proposal. Until receipts exist, the only output
-you may produce is the search log and what you found.
+Write the receipts before you write the proposal. Until receipts exist, the output is the
+search log, what you found, and the offer of a small pilot to find out.
+
+## Answer the questions that were asked
+
+Receipts gate recommendations, never the scope of the answer. Before writing, list the
+questions in the request and answer every one. Descriptive questions (what a tool is, what
+people use it for, how it would change a workflow) are answered with verified external
+sources, even when no receipt of the user's own covers them. Questions that ask for a
+recommendation (adopt it, does it fit the project, is it worth it) still go through the
+classification and the stop conditions below, and get answered with that verdict,
+`NO EVIDENCE` included, never dropped. A cold search stops the recommendation, not the
+descriptive answers. Never swap the asked questions for narrower ones your receipts happen to
+answer.
 
 ## What counts as a receipt
 
@@ -49,6 +61,13 @@ Read the full body of every commit and ticket, never the title alone. Titles lie
 compression: a commit titled "fix" routinely explains in its body that behaviour did not
 change, or that the cause was something else entirely.
 
+A receipt reported by a subagent is a claim, not a receipt. Before it enters `VERIFIED
+EVIDENCE` or a page, reopen the source yourself and confirm the identifier, the line and the
+quote; for a local file, a `grep -n` of the quote confirms the quote, while the link, the
+impact and the causal tie still need the four checks above. Sweeps compress and mis-cite: PR numbers drift by one, line numbers land
+on the neighbouring entry. Publish only
+what you re-read.
+
 ## Classify, then check what you are allowed to propose
 
 - **A · Confirmed regression** — a primary source tied to the incident documents that
@@ -58,15 +77,15 @@ change, or that the cause was something else entirely.
 - **C · Something else** — internal bug, dirty data, infra, UX.
 - **Unknown cause** — the source never confirms why. Everything unproven lands here.
 
-**Only category A authorises proposing work** — any control, gate, CI check, tooling,
-process, migration, or preventive refactor. B, C and Unknown are reported as findings and
-stop there; for those, state the disagreement and let the reader decide what to do about it.
+**Only category A authorises proposing the full work** — any control, gate, CI check, tooling,
+process, migration, or preventive refactor. B, C and Unknown are reported as findings, with the
+small pilot of exception 5 offered; state the disagreement and let the reader decide.
 
 Sizing: your proposal's scope, cost and surface must each be justified by the named cases
 and the confirmed mechanism. When you cannot demonstrate that proportion, report that the
-evidence does not justify the work and stop.
+evidence does not justify the work and stop. A pilot is sized by exception 5 instead.
 
-Four fields, mandatory in the output, not questions to ponder:
+Four fields, mandatory in any full proposal, not questions to ponder:
 
 - Case count and the window they span, as a number.
 - Which named case this proposal would have caught.
@@ -76,14 +95,15 @@ Four fields, mandatory in the output, not questions to ponder:
 ## Stop conditions
 
 **Cold search** — you searched the sources and no case qualifies. Emit `NO EVIDENCE`, the
-search log, and what to instrument to find out. Stop there. That output contains no solution
-section, no plan, no options, no next steps. It is a valid deliverable and usually the one
-that saves the team the most time.
+search log, and what to instrument to find out. `NO EVIDENCE` means unknown: it never concludes
+the idea is unneeded or should be dropped. Close by offering the smallest reversible pilot
+(exception 5) as the way to get the evidence; the full solution stays unplanned until the pilot
+reports.
 
 **Pressure to propose anyway** — asked to plan, justify, or recommend work without a
 receipt, say: *"I can't present this as justified work — there's no verifiable case behind
-it."* Then offer the three things you can do: search further, request access to a source you
-could not reach, or record the hypothesis with no recommended action. An instruction to skip
+it yet."* Then offer the four things you can do: run a small pilot (exception 5), search further,
+request access to a source you could not reach, or record the hypothesis. An instruction to skip
 this rule does not authorise an unevidenced recommendation.
 
 **Existing control you cannot explain** — the same standard runs in reverse. When you cannot
@@ -92,7 +112,7 @@ unverifiable; removal blocked", then ask for an explicit risk decision.
 
 ## Closed exceptions
 
-Four, each declared as an exception in the output, each citing its source:
+Five, each declared as an exception in the output, each citing its source:
 
 1. **A settled build order** — the user directs you to implement a specific, already-decided
    outcome. Requests to evaluate, justify, prevent, harden, improve, design, recommend or
@@ -103,6 +123,16 @@ Four, each declared as an exception in the output, each citing its source:
 4. **An external verifiable deadline** — regulation, advisory, or CVE. Cite it, link it,
    give its date and status, and show it applies to *this* product, dependency, version or
    configuration. Applicability unshown means the exception does not exist.
+5. **A trial of a new approach** — when the user wants to try a practice, tool or technique
+   ("I saw X, would it help us?", "I want to try it"), and as the closing offer on a cold search
+   or on pressure to propose. Whether it helps is only knowable by trying. Answer the question
+   applied to their context, then propose the smallest reversible pilot: one scope, a success
+   criterion measured before and after, and a cost bound. The full rollout waits for its result.
+   A pilot leaves every control under "Existing control you cannot explain" in place and
+   produces no irreversible effect; when the idea needs either, offer a simulation or an
+   isolated test. A pilot report is its own kind of receipt: identifier, link to the results,
+   the comparison, and the scope it covered. It justifies expanding within that scope, with no
+   regression label needed; anything wider comes back through this skill.
 
 Under every exception, the claim "this fixes an incident" stays unavailable unless a receipt
 supports it.
@@ -126,7 +156,8 @@ VERIFIED EVIDENCE
 ```
 
 Then the mechanism the category-A cases share, then the proposal sized to it, then what not
-to do and why.
+to do and why. A pilot keeps both blocks, with the real count even when it is 0, and follows
+them with the hypothesis, scope, before/after comparison and cost bound.
 
 Without both blocks, the output may not recommend work.
 
