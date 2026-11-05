@@ -28,6 +28,9 @@ Checked before opening the file:
 - **One headline number per chapter**, in display size, at most one secondary
   in smaller type. Never a table where every number carries the same visual
   weight: the reader cannot tell what matters.
+- **A source about something visual shows it**: a page on UI, design or motion
+  carries the source's real before/after captures side by side, each one opened
+  and looked at first; if the source publishes none, the page says so.
 - **Hard length budget for source explainers: about 450 words of prose on the
   whole page**, one screen per source at most, no glossary. Cut sentences
   before cutting numbers.
