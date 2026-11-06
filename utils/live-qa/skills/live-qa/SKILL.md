@@ -21,10 +21,11 @@ reading correct are different, weaker claims — report them as what they are, n
    npx playwright install chromium`. Copy `kit-template.mjs` there and write each battery as a
    `.mjs` beside it. The browser download is cached per machine; only the first run is slow. Not
    knowing how to run Playwright is never a blocker: this step is the how.
-3. **Boot the harness.** Start from `kit-template.mjs` (Playwright; auth injection,
-   service-worker blocking, bot masking, API capture already solved — see Traps). Fill in the
-   `QA_TARGET` env var and the per-app markers flagged `EDIT PER APP`. Smoke it: authenticated
-   landing + one API 200 before any case runs.
+3. **Boot the harness.** Start from `kit-template.mjs` (Playwright; service-worker blocking, bot
+   masking, API capture already solved — see Traps). Set `QA_TARGET`, `QA_TOKEN` and `QA_TOKEN_KEY`,
+   plus `QA_ENTRY_PATH` for a hash router (`/#/`). The default session writes a token to
+   localStorage; for cookies or a login form, edit `seedSession` — every per-app spot is flagged
+   `EDIT PER APP`. Smoke it: authenticated landing + one API 200 before any case runs.
 4. **Run the batteries.** Split cases into read-only batteries (navigation, states, layouts,
    viewports — safe to fan out across parallel agents) and one **mutating battery** (completions,
    submissions, anything that writes) that runs last and alone: mutations destroy the clean state
@@ -47,7 +48,8 @@ reading correct are different, weaker claims — report them as what they are, n
 Solved in `kit-template.mjs`; listed so nobody re-derives them:
 
 1. Tracking and bot-detection scripts drop automation traffic — mask `navigator.webdriver`, the
-   user agent, AND `navigator.userAgentData.brands` (HeadlessChrome hides there).
+   user agent, `navigator.userAgentData.brands` AND the `sec-ch-ua` request headers (HeadlessChrome
+   hides in the last two), all matching the running browser's version and the requested viewport.
 2. Service workers swallow network from Playwright's listeners — create contexts with
    `serviceWorkers: 'block'`.
 3. Hash routers re-read localStorage only on document load — after writing tokens or flags,
@@ -78,8 +80,9 @@ Playwright: `e2e explore '<goal>'` drives the app on its own and reports finding
   --max-steps 12 --timeout 900000 --output .e2e/explore-<device> --reporter json,markdown`. Run
   devices in parallel; each takes ~10–15 min. Findings are `kind: "issue"` in the report, but
   **failed steps also hide findings** in their `summary` text — read both.
-- **Re-adjudicate every finding with a Playwright repro before acting** (first real run: 4
-  findings, 3 false positives):
+- **Re-adjudicate every finding with a Playwright repro before acting** (invented example, not a
+  measured rate: a report with 4 findings could hold 1 real issue and 3 false positives). Shapes
+  to check:
   - links with `target="_blank"` read as "did nothing" — the agent never sees the new tab; check
     with `context.waitForEvent('page')`;
   - "control X intercepted my tap" when the agent tapped a non-interactive heading next to it;
@@ -89,7 +92,6 @@ Playwright: `e2e explore '<goal>'` drives the app on its own and reports finding
 ## Entry recipes per app
 
 Each app needs an entry recipe before its first run: test users, how auth works (magic link, OTP,
-password), where the session token lives (e.g. `localStorage.accessToken`), and any environment
-quirks. Keep it in that app's own repo or docs hub — never in this skill. If none exists, find or
+password), where the session lives (a localStorage key or a cookie), and any environment quirks. Keep it in that app's own repo or docs hub — never in this skill. If none exists, find or
 write one before improvising an entry path; credentials belong in a gitignored local file or env
 vars, never in the recipe.

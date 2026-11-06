@@ -7,7 +7,7 @@
 #   - manifests parse and stay in sync (claude version == codex version)
 #   - the skill is discoverable: skills/html-deliverable/SKILL.md with
 #     name + description frontmatter, and reference.html next to it
-#   - the generic template leaked no personal/project-specific data
+#   - the generic template carries no data from anyone's own environment
 set -u
 
 TESTS_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
@@ -83,16 +83,12 @@ else
 fi
 
 # --------------------------------------------------------------- scrub check
-# The generic template must not carry data from the personal skill it came
-# from. The author's name legitimately appears in the plugin manifests and
-# the repo slug (chakkyy/agent-utils) in install commands, so only skill
-# content and README are scrubbed, and the slug is not part of the pattern.
-LEAKS=$(grep -riEn 'carlos|linear\.app|DEV-[0-9]|lang="es"|cc report' \
-  "$SKILL_DIR" "$PLUGIN_DIR/README.md" 2>/dev/null || true)
-if [ -z "$LEAKS" ]; then
-  ok "no personal/project data in skill content or README"
+# See tests/scrub.sh for what it detects and why only skill content and README
+# are scanned.
+if LEAKS=$(sh "$REPO_DIR/tests/scrub.sh" "$PLUGIN_DIR" "$SKILL_DIR" "$PLUGIN_DIR/README.md" 2>&1); then
+  ok "no environment data in skill content or README"
 else
-  bad "personal data leaked into the generic template:
+  bad "environment data in the generic template:
 $LEAKS"
 fi
 

@@ -7,7 +7,7 @@
 #   - manifests parse and stay in sync (claude version == codex version == kit)
 #   - the skill is discoverable: skills/html-interactive/SKILL.md with
 #     name + description frontmatter, and the kit files next to it
-#   - nothing project-specific leaked into the skill, the kit or the README
+#   - the skill, the kit and the README carry no data from anyone's own environment
 #   - the kit behaves: validation, answer reconciliation, export, build
 set -u
 
@@ -95,15 +95,12 @@ else
 fi
 
 # --------------------------------------------------------------- scrub check
-# The author's name legitimately appears in the plugin manifests and the repo
-# slug (chakkyy/agent-utils) in install commands, so only skill content, kit
-# and README are scrubbed, and the slug is not part of the pattern.
-LEAKS=$(grep -riEn 'carlos|linear\.app|DEV-[0-9]|/[U]sers/|~/[D]esktop' \
-  "$SKILL_DIR" "$PLUGIN_DIR/README.md" "$TESTS_DIR/kit.test.mjs" 2>/dev/null || true)
-if [ -z "$LEAKS" ]; then
-  ok "no personal/project data in skill content, kit, tests or README"
+# See tests/scrub.sh for what it detects and why only skill content, kit, tests
+# and README are scanned.
+if LEAKS=$(sh "$REPO_DIR/tests/scrub.sh" "$PLUGIN_DIR" "$SKILL_DIR" "$PLUGIN_DIR/README.md" "$TESTS_DIR/kit.test.mjs" 2>&1); then
+  ok "no environment data in skill content, kit, tests or README"
 else
-  bad "personal data leaked into the generic skill:
+  bad "environment data in the generic skill:
 $LEAKS"
 fi
 

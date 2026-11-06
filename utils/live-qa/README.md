@@ -18,9 +18,11 @@ falling back to code reading and calling it tested.
   battery, adjudicate everything with evidence.
 - `skills/live-qa/kit-template.mjs` — Playwright harness starter with the
   hard-won parts already solved: bot masking (`navigator.webdriver`, UA,
-  `userAgentData.brands`), service-worker blocking, auth-token injection,
-  API capture. Per-app spots are marked `EDIT PER APP` and fed by
-  `QA_TARGET` / `QA_TOKEN` / `QA_API_MARKER` env vars.
+  `userAgentData.brands`, `sec-ch-ua` headers, consistent for desktop and mobile
+  runs), service-worker blocking, API capture. Per-app spots are marked
+  `EDIT PER APP` and fed by the `QA_TARGET`, `QA_TOKEN`, `QA_TOKEN_KEY`,
+  `QA_ENTRY_PATH` and `QA_API_MARKER` env vars. The default session writes a
+  token to localStorage; for cookies or a login form, edit `seedSession`.
 
 The skill also carries seven field-proven traps (skeleton screenshots reading as
 false FAILs, loose text selectors clicking look-alike controls, hash routers
