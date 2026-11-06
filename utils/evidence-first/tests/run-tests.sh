@@ -9,7 +9,7 @@
 #     name + description frontmatter, and PRINCIPLES.md next to it
 #   - the load-bearing rules survive edits: the four receipt parts, the
 #     output-contract blocks, the NO EVIDENCE stop condition
-#   - the generic skill leaked no personal/project-specific data
+#   - the generic skill carries no data from anyone's own environment
 set -u
 
 TESTS_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
@@ -107,16 +107,12 @@ else
 fi
 
 # --------------------------------------------------------------- scrub check
-# The generic skill must not carry data from the personal/company copies it is
-# synced with. The author's name legitimately appears in the plugin manifests
-# and the repo slug (chakkyy/agent-utils) in install commands, so only skill
-# content and README are scrubbed, and the slug is not part of the pattern.
-LEAKS=$(grep -riEn 'carlos|linear\.app|DEV-[0-9]|ZEN-[0-9]|coderabbit|lang="es"|cc report' \
-  "$SKILL_DIR" "$PLUGIN_DIR/README.md" 2>/dev/null || true)
-if [ -z "$LEAKS" ]; then
-  ok "no personal/project data in skill content or README"
+# See tests/scrub.sh for what it detects and why only skill content and README
+# are scanned.
+if LEAKS=$(sh "$REPO_DIR/tests/scrub.sh" "$PLUGIN_DIR" "$SKILL_DIR" "$PLUGIN_DIR/README.md" 2>&1); then
+  ok "no environment data in skill content or README"
 else
-  bad "personal data leaked into the generic skill:
+  bad "environment data in the generic skill:
 $LEAKS"
 fi
 

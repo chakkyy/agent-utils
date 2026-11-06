@@ -13,6 +13,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+      - name: repo-level checks
+        run: tests/run-tests.sh
       - name: time-awareness test suite
         run: utils/time-awareness/tests/run-tests.sh
       - name: html-deliverable test suite
