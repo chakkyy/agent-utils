@@ -46,6 +46,8 @@ allows() {
 # ------------------------------------------------------------------ flagged
 flags 'the author first name, any case'  'ask jane about it'
 flags 'the author last name'             'see Example for details'
+flags 'the author name at a line start'  'jane wrote this'
+flags 'the author name in a path'        'notes/jane-example.md'
 flags 'an uppercase ticket id'           'fixed in ABC-123'
 flags 'a ticket next to a sample id'     'ACME-110 and ABC-123'
 flags 'a hosted tracker link'            'https://linear.app/some-team/issue/1'
@@ -56,6 +58,7 @@ flags 'a home-relative folder'           'save it to ~/Desktop/notes.md'
 flags 'a non-English document language'  '<html lang="fr">'
 
 # ------------------------------------------------------------------ allowed
+allows 'the author name inside a word'   'an exampleless janeway note'
 allows 'an English document'             '<html lang="en">'
 allows 'a regional English document'     '<html lang="en-GB">'
 allows 'a templated language'            '<html lang="${page.lang}">'
@@ -65,6 +68,13 @@ allows 'lowercase ids in slugs'          'tier-1 and item-2'
 allows 'dotted paths under home'         'read ~/.config/app/brand.md'
 
 # ------------------------------------------------------------- broken input
+sh "$SCRUB" "$FIXTURE" </dev/null >/dev/null 2>&1
+if [ "$?" -eq 2 ]; then
+  ok "scrub reports no paths as an error"
+else
+  bad "scrub does not report no paths as an error"
+fi
+
 sh "$SCRUB" "$FIXTURE" "$FIXTURE/missing.md" >/dev/null 2>&1
 if [ "$?" -eq 2 ]; then
   ok "scrub reports a missing path as an error"

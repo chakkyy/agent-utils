@@ -59,7 +59,9 @@ export async function boot({ mobile = false } = {}) {
   });
   await ctx.addInitScript(({ uad, navigatorPlatform }) => {
     Object.defineProperty(Object.getPrototypeOf(navigator), 'webdriver', { get: () => undefined });
-    const data = { ...uad, getHighEntropyValues: () => Promise.resolve({ ...uad }), toJSON: () => ({ ...uad }) };
+    const fullVersionList = uad.brands.map((b) => ({ brand: b.brand, version: `${b.version}.0.0.0` }));
+    const getHighEntropyValues = (hints = []) => Promise.resolve({ ...uad, ...(hints.includes('fullVersionList') && { fullVersionList }) });
+    const data = { ...uad, getHighEntropyValues, toJSON: () => ({ ...uad }) };
     Object.defineProperty(Navigator.prototype, 'userAgentData', { get: () => data });
     if (navigatorPlatform) Object.defineProperty(Navigator.prototype, 'platform', { get: () => navigatorPlatform });
   }, identity);

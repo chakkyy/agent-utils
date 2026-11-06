@@ -13,6 +13,9 @@
 # Exit: 0 clean, 1 leak found (matches on stdout), 2 could not run the check.
 set -u
 
+# Without paths, grep would search somewhere the caller never asked for.
+[ "$#" -ge 2 ] || { echo "scrub: usage: scrub.sh <plugin-dir> <path>..." >&2; exit 2; }
+
 PLUGIN_DIR=$1
 shift
 
@@ -27,6 +30,8 @@ print("|".join(words))
   exit 2
 }
 
+# Whole words only, so a short name doesn't flag ordinary words that contain it.
+AUTHOR="(^|[^[:alnum:]])($AUTHOR)($|[^[:alnum:]])"
 TRACKERS='linear\.app|atlassian\.net|slack\.com|notion\.(so|site)'
 HOME_PATHS='/Users/|/home/|~/[A-Z]|C:\\Users\\'
 # Starts with a letter so templated values like lang="${x}" stay out of it.
