@@ -45,8 +45,9 @@ function clientIdentity(browserVersion, mobile) {
 }
 
 export async function boot({ mobile = false } = {}) {
-  const missing = Object.keys(REQUIRED).filter((name) => !REQUIRED[name]);
+  const missing = Object.keys(REQUIRED).filter((name) => !REQUIRED[name]?.trim());
   if (missing.length) throw new Error(`Missing ${missing.join(', ')}: no session to test with. Set them, or edit seedSession for your app.`);
+  if (!/^https?:\/\/[^/]/i.test(TARGET)) throw new Error(`QA_TARGET must be an http(s) URL, got "${TARGET}": no session to test with.`);
   const browser = await chromium.launch({ args: ['--disable-blink-features=AutomationControlled'] });
   const identity = clientIdentity(browser.version(), mobile);
   const ctx = await browser.newContext({

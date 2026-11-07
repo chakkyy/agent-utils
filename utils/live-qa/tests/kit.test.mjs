@@ -108,6 +108,9 @@ for (const [name, env] of [
   ['missing target', { QA_TARGET: undefined }],
   ['missing token', { QA_TOKEN: undefined }],
   ['missing token key', { QA_TOKEN_KEY: undefined }],
+  ['blank token', { QA_TOKEN: '   ' }],
+  ['malformed target', { QA_TARGET: 'not-a-url' }],
+  ['non-HTTP target', { QA_TARGET: 'file:///tmp/index.html' }],
 ]) {
   test(`stops on a ${name} before launching a browser`, () => fixture(async ({ kit, calls }) => {
     await assert.rejects(kit.boot(), /no session to test with/);
