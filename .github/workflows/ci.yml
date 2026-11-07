@@ -23,3 +23,5 @@ jobs:
         run: utils/evidence-first/tests/run-tests.sh
       - name: html-interactive test suite
         run: utils/html-interactive/tests/run-tests.sh
+      - name: live-qa test suite
+        run: utils/live-qa/tests/run-tests.sh

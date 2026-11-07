@@ -117,7 +117,6 @@ $LEAKS"
   fi
 }
 
-check_plugin live-qa "$REPO_DIR/utils/live-qa/README.md" "$REPO_DIR/utils/live-qa/skills"
 check_plugin time-awareness "$REPO_DIR/utils/time-awareness/README.md" "$REPO_DIR/utils/time-awareness/hooks"
 
 # ------------------------------------------------------------------- summary
