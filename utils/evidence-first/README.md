@@ -98,7 +98,7 @@ codex plugin marketplace add chakkyy/agent-utils
 ```
 
 Then install from the `/plugins` browser (or
-`codex plugin install evidence-first`) and **start a new session** — plugin
+`codex plugin add evidence-first@agent-utils`) and **start a new session** — plugin
 components apply on the next session. No hooks to trust: this plugin is
 skills-only.
 

@@ -58,7 +58,7 @@ codex plugin marketplace add chakkyy/agent-utils
 Then, inside Codex:
 
 1. Install the plugin from the `/plugins` browser (or
-   `codex plugin install time-awareness`).
+   `codex plugin add time-awareness@agent-utils`).
 2. **Start a new session** — plugin components apply on the next session.
 3. **Trust the hook**: Codex does not run plugin hooks until you review them.
    Run `/hooks`, review `inject-time.sh`, and trust it. Trust is recorded

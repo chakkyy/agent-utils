@@ -80,7 +80,7 @@ codex plugin marketplace add chakkyy/agent-utils
 ```
 
 Then install from the `/plugins` browser (or
-`codex plugin install html-deliverable`) and **start a new session** — plugin
+`codex plugin add html-deliverable@agent-utils`) and **start a new session** — plugin
 components apply on the next session. No hooks to trust: this plugin is
 skills-only.
 
