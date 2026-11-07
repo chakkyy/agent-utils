@@ -106,7 +106,7 @@ fi
 
 # ----------------------------------------------------------------- kit tests
 if command -v node >/dev/null 2>&1; then
-  if KIT_OUT=$(node --test "$TESTS_DIR/kit.test.mjs" 2>&1); then
+  if KIT_OUT=$(node --test --test-reporter=tap "$TESTS_DIR/kit.test.mjs" 2>&1); then
     ok "kit unit tests ($(printf '%s\n' "$KIT_OUT" | sed -n 's/^# pass //p') passed)"
   else
     bad "kit unit tests failed:
