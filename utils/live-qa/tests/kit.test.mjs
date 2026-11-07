@@ -111,6 +111,8 @@ for (const [name, env] of [
   ['blank token', { QA_TOKEN: '   ' }],
   ['malformed target', { QA_TARGET: 'not-a-url' }],
   ['non-HTTP target', { QA_TARGET: 'file:///tmp/index.html' }],
+  ['target with an empty host', { QA_TARGET: 'https://?' }],
+  ['target with a space', { QA_TARGET: 'https://example.com bad' }],
 ]) {
   test(`stops on a ${name} before launching a browser`, () => fixture(async ({ kit, calls }) => {
     await assert.rejects(kit.boot(), /no session to test with/);

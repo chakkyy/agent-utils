@@ -44,10 +44,21 @@ function clientIdentity(browserVersion, mobile) {
   };
 }
 
+// A typo in QA_TARGET should stop before Chromium starts, not fail later inside page.goto.
+function isHttpUrl(value) {
+  if (!value || /\s/.test(value)) return false;
+  try {
+    const url = new URL(value);
+    return (url.protocol === 'http:' || url.protocol === 'https:') && Boolean(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
 export async function boot({ mobile = false } = {}) {
   const missing = Object.keys(REQUIRED).filter((name) => !REQUIRED[name]?.trim());
   if (missing.length) throw new Error(`Missing ${missing.join(', ')}: no session to test with. Set them, or edit seedSession for your app.`);
-  if (!/^https?:\/\/[^/]/i.test(TARGET)) throw new Error(`QA_TARGET must be an http(s) URL, got "${TARGET}": no session to test with.`);
+  if (!isHttpUrl(TARGET)) throw new Error(`QA_TARGET must be an http(s) URL, got "${TARGET}": no session to test with.`);
   const browser = await chromium.launch({ args: ['--disable-blink-features=AutomationControlled'] });
   const identity = clientIdentity(browser.version(), mobile);
   const ctx = await browser.newContext({
